@@ -1,0 +1,72 @@
+<view class="page-wrap" style="padding-top:{{headerHeight}}px">
+  <view class="post-nav" style="padding-top:{{statusBarHeight}}px">
+    <view class="post-nav-side post-nav-cancel" bindtap="onCancel">取消</view>
+    <text class="post-nav-title">发布任务</text>
+    <view class="post-nav-side post-nav-submit" bindtap="submitTask">发布</view>
+  </view>
+
+  <view class="post-body">
+    <view class="fg cover-fg">
+      <text class="fl">封面图（选填）</text>
+      <view class="cover-box" wx:if="{{!form.coverPreview}}" bindtap="chooseCover">
+        <text class="cover-placeholder">点击上传封面（选填）</text>
+      </view>
+      <view class="cover-preview-wrap" wx:else>
+        <image class="cover-preview" src="{{form.coverPreview}}" mode="aspectFill" />
+        <view class="cover-upload-mask" wx:if="{{coverUploading}}">上传中…</view>
+        <view class="cover-remove" catchtap="removeCover">×</view>
+      </view>
+    </view>
+
+    <view class="post-hint">发布后积分将冻结至平台托管，按满意度结算给承接方。</view>
+
+    <view class="fg">
+      <text class="fl">任务标题 *</text>
+      <input class="fi" placeholder="请输入任务名称" value="{{form.title}}" bindinput="onField" data-key="title" />
+    </view>
+
+    <view class="fg">
+      <text class="fl">任务描述 *</text>
+      <textarea class="fta" placeholder="详细说明需求与交付标准" value="{{form.desc}}" bindinput="onField" data-key="desc" maxlength="-1" />
+    </view>
+
+    <view class="fg">
+      <text class="fl">分类</text>
+      <picker mode="selector" range="{{cats}}" value="{{form.catIdx}}" bindchange="onCatChange">
+        <view class="fsl">{{cats[form.catIdx]}}</view>
+      </picker>
+    </view>
+
+    <view class="fg">
+      <text class="fl">积分预算 *</text>
+      <view class="credits-row">
+        <input class="fi" type="number" placeholder="输入积分" value="{{form.credits}}" bindinput="onField" data-key="credits" />
+        <text class="credits-unit">积分</text>
+      </view>
+      <view class="msu" style="margin-top:6px">当前余额 {{balance}} 积分</view>
+    </view>
+
+    <view class="fg">
+      <text class="fl">招募人数</text>
+      <input class="fi" type="number" value="{{form.quota}}" bindinput="onField" data-key="quota" />
+    </view>
+
+    <view class="fg">
+      <text class="fl">靠谱度门槛</text>
+      <picker mode="selector" range="{{lvOptions}}" value="{{form.minLvIdx}}" bindchange="onMinLvChange">
+        <view class="fsl">{{lvOptions[form.minLvIdx]}}</view>
+      </picker>
+    </view>
+
+    <view class="fg">
+      <text class="fl">截止日期</text>
+      <picker mode="date" value="{{form.deadline}}" bindchange="onDeadlineChange">
+        <view class="fsl">{{form.deadline}}</view>
+      </picker>
+    </view>
+  </view>
+
+  <view class="post-ft">
+    <view class="btn bp" bindtap="submitTask">立即发布</view>
+  </view>
+</view>

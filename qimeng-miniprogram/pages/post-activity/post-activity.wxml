@@ -1,0 +1,66 @@
+<view class="page-wrap" style="padding-top:{{headerHeight}}px">
+  <view class="post-nav" style="padding-top:{{statusBarHeight}}px">
+    <view class="post-nav-side post-nav-cancel" bindtap="onCancel">取消</view>
+    <text class="post-nav-title">发布活动</text>
+    <view class="post-nav-side post-nav-submit" bindtap="submitActivity">发布</view>
+  </view>
+
+  <view class="post-body">
+    <view class="fg cover-fg">
+      <text class="fl">封面图（选填）</text>
+      <view class="cover-box" wx:if="{{!form.coverPreview}}" bindtap="chooseCover">
+        <text class="cover-placeholder">点击上传封面（选填）</text>
+      </view>
+      <view class="cover-preview-wrap" wx:else>
+        <image class="cover-preview" src="{{form.coverPreview}}" mode="aspectFill" />
+        <view class="cover-upload-mask" wx:if="{{coverUploading}}">上传中…</view>
+        <view class="cover-remove" catchtap="removeCover">×</view>
+      </view>
+    </view>
+
+    <view class="post-hint">活动发布后将展示在活动广场，好友可在线报名参与。</view>
+
+    <view class="fg">
+      <text class="fl">活动标题 *</text>
+      <input class="fi" placeholder="请输入活动名称" value="{{form.title}}" bindinput="onField" data-key="title" />
+    </view>
+
+    <view class="fg">
+      <text class="fl">活动类型</text>
+      <picker mode="selector" range="{{types}}" value="{{form.typeIdx}}" bindchange="onTypeChange">
+        <view class="fsl">{{types[form.typeIdx]}}</view>
+      </picker>
+    </view>
+
+    <view class="fg">
+      <text class="fl">开始时间</text>
+      <view class="datetime-row">
+        <picker mode="date" value="{{form.startDate}}" bindchange="onStartDateChange">
+          <view class="fsl">{{form.startDate}}</view>
+        </picker>
+        <picker mode="time" value="{{form.startTime}}" bindchange="onStartTimeChange">
+          <view class="fsl time-pick">{{form.startTime}}</view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="fg">
+      <text class="fl">地点 *</text>
+      <input class="fi" placeholder="线下地址或线上会议说明" value="{{form.location}}" bindinput="onField" data-key="location" />
+    </view>
+
+    <view class="fg">
+      <text class="fl">人数上限</text>
+      <input class="fi" type="number" placeholder="20" value="{{form.capacity}}" bindinput="onField" data-key="capacity" />
+    </view>
+
+    <view class="fg">
+      <text class="fl">活动简介</text>
+      <textarea class="fta" placeholder="选填：议程、嘉宾、注意事项等" value="{{form.desc}}" bindinput="onField" data-key="desc" maxlength="-1" />
+    </view>
+  </view>
+
+  <view class="post-ft">
+    <view class="btn bp" bindtap="submitActivity">立即发布</view>
+  </view>
+</view>

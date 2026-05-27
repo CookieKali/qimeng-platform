@@ -1,0 +1,437 @@
+<view class="page-wrap" style="padding-top:{{headerHeight}}px;padding-bottom:{{pageBottom}}px">
+  <view class="nav">
+    <text class="nav-t">我的</text>
+    <view class="nav-btn logout-btn" bindtap="doLogout">退出</view>
+  </view>
+
+  <view class="profile-completeness" wx:if="{{profileCompleteness < 100}}">
+    <view class="pc-label">名片完整度 {{profileCompleteness}}%</view>
+    <view class="pc-bar"><view class="pc-fill {{pcFillClass}}" style="width:{{profileCompleteness}}%"></view></view>
+    <view class="pc-tip" bindtap="goEditProfile">点击完善资料 →</view>
+  </view>
+
+  <view class="seg">
+    <view class="sb2 {{sub === 0 ? 'on' : ''}}" bindtap="switchSub" data-n="0">档案</view>
+    <view class="sb2 {{sub === 1 ? 'on' : ''}}" bindtap="switchSub" data-n="1">信用</view>
+    <view class="sb2 {{sub === 2 ? 'on' : ''}}" bindtap="switchSub" data-n="2">钱包</view>
+    <view class="sb2 {{sub === 3 ? 'on' : ''}}" bindtap="switchSub" data-n="3">记录</view>
+  </view>
+
+  <!-- ===== 档案 ===== -->
+  <block wx:if="{{sub === 0}}">
+    <view class="profile-hero">
+      <view class="profile-hero-bg"></view>
+      <view class="profile-hero-body">
+        <view class="pav profile-hero-av" style="background:{{myAv.bg}}" bindtap="showAvatarModal">
+          <image wx:if="{{myAv.imgUrl}}" class="profile-hero-av-img" src="{{myAv.imgUrl}}" mode="aspectFill" />
+          <text wx:else class="profile-hero-av-text" style="color:{{myAv.c}}">{{MY.nameAbbr}}</text>
+          <view class="pav-badge profile-hero-av-edit">换头像</view>
+        </view>
+        <view class="profile-hero-info">
+          <view class="profile-hero-name">{{MY.name || '未设置姓名'}}</view>
+          <view class="profile-hero-line" wx:if="{{MY.job || MY.co}}">
+            <text wx:if="{{MY.job}}">{{MY.job}}</text>
+            <text wx:if="{{MY.job && MY.co}}"> · </text>
+            <text wx:if="{{MY.co}}">{{MY.co}}</text>
+          </view>
+          <view class="profile-hero-line profile-hero-meta" wx:if="{{MY.city || MY.industry}}">
+            <text wx:if="{{MY.city}}">{{MY.city}}</text>
+            <text wx:if="{{MY.city && MY.industry}}"> · </text>
+            <text wx:if="{{MY.industry}}">{{MY.industry}}</text>
+          </view>
+          <view class="profile-hero-tags">
+            <text class="pl {{MY.lvClass}}">{{MY.lv}}</text>
+            <text class="pl {{MY.creditLvClass}}">靠谱 {{MY.creditLv}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="profile-hero-actions">
+        <view class="profile-btn-primary" bindtap="goEditProfile">编辑资料</view>
+        <view class="profile-btn-ghost" bindtap="showCardPreview">名片预览</view>
+      </view>
+    </view>
+
+    <view class="profile-card-block">
+      <view class="profile-card-hd">
+        <text class="profile-card-title">我的名片</text>
+        <text class="profile-card-link" bindtap="goEditProfile">去编辑 ›</text>
+      </view>
+      <view class="profile-card-body" wx:if="{{hasCardPreview}}">
+        <view class="profile-kv" wx:if="{{myProfile.personalValue}}">
+          <text class="profile-k">个人价值</text>
+          <text class="profile-v">{{myProfile.personalValue}}</text>
+        </view>
+        <view class="profile-kv" wx:if="{{myProfile.talent}}">
+          <text class="profile-k">核心能力</text>
+          <text class="profile-v">{{myProfile.talent}}</text>
+        </view>
+        <view class="profile-kv" wx:if="{{myProfile.resourcesText}}">
+          <text class="profile-k">可提供</text>
+          <text class="profile-v">{{myProfile.resourcesText}}</text>
+        </view>
+        <view class="profile-kv" wx:if="{{myProfile.needsText}}">
+          <text class="profile-k">当前需求</text>
+          <text class="profile-v">{{myProfile.needsText}}</text>
+        </view>
+        <view class="profile-contact-strip">
+          <text wx:if="{{MY.phone}}">📞 {{MY.phone}}</text>
+          <text wx:if="{{MY.email}}"> · ✉️ {{MY.email}}</text>
+        </view>
+      </view>
+      <view class="profile-card-empty" wx:else bindtap="goEditProfile">
+        <text class="profile-card-empty-icon">📇</text>
+        <text class="profile-card-empty-title">名片还是空的</text>
+        <text class="profile-card-empty-desc">补充职务、公司与个人价值，方便好友了解你</text>
+        <view class="profile-card-empty-btn">立即完善</view>
+      </view>
+    </view>
+
+    <view class="profile-menu-group">
+      <view class="profile-menu-cell" bindtap="showInviteModal" hover-class="profile-menu-cell-press">
+        <text class="sym-icon profile-menu-ico">🎁</text>
+        <view class="profile-menu-text">
+          <text class="profile-menu-label">邀请加入企盟</text>
+          <text class="profile-menu-sub">邀请码 {{MY.inviteCode}} · 已邀请 {{MY.invitedCount}} 人</text>
+        </view>
+        <text class="profile-menu-arrow">›</text>
+      </view>
+      <view class="profile-menu-cell profile-menu-cell-last" bindtap="goContribution" hover-class="profile-menu-cell-press">
+        <text class="sym-icon profile-menu-ico">🏢</text>
+        <view class="profile-menu-text">
+          <text class="profile-menu-label">贡献积分中心</text>
+          <text class="profile-menu-sub">兑换流量扶持 / 信用加速 / 权益</text>
+        </view>
+        <text class="profile-menu-arrow">›</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- ===== 信用 ===== -->
+  <block wx:elif="{{sub === 1}}">
+    <view style="background:#091626;border:1.5px solid #1a3860;border-radius:15px;margin:10px 12px;padding:15px">
+      <view style="display:flex;align-items:center;gap:15px;margin-bottom:14px">
+        <view class="ring-outer" style="background:conic-gradient({{clvData.color}} 0% {{creditPct}}%, #141e32 {{creditPct}}% 100%)">
+          <view class="ring-inner">
+            <view style="font-size:21px;font-weight:900;color:{{clvData.color}}">{{MY.creditScore}}</view>
+            <view style="font-size:10px;color:#2a4060;font-weight:600">靠谱度</view>
+          </view>
+        </view>
+        <view style="flex:1">
+          <view style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+            <text class="pl {{MY.creditLvClass}}">{{MY.creditLv}}</text>
+            <text style="font-size:15px;color:#e0eefc;font-weight:800">{{MY.creditLv}} 级</text>
+          </view>
+          <view style="font-size:11px;color:#7090b0;line-height:1.7;font-weight:600">{{clvData.perks}}</view>
+        </view>
+      </view>
+      <view style="display:flex;gap:7px">
+        <view style="flex:1;background:#070d1a;border:1.5px solid #1c2840;border-radius:9px;padding:9px;text-align:center">
+          <view style="font-size:10px;color:#3a5878;margin-bottom:4px;font-weight:700">完成率</view>
+          <view style="font-size:14px;font-weight:900;color:#e0eefc">94%</view>
+        </view>
+        <view style="flex:1;background:#070d1a;border:1.5px solid #1c2840;border-radius:9px;padding:9px;text-align:center">
+          <view style="font-size:10px;color:#3a5878;margin-bottom:4px;font-weight:700">守约率</view>
+          <view style="font-size:14px;font-weight:900;color:#e0eefc">100%</view>
+        </view>
+        <view style="flex:1;background:#070d1a;border:1.5px solid #1c2840;border-radius:9px;padding:9px;text-align:center">
+          <view style="font-size:10px;color:#3a5878;margin-bottom:4px;font-weight:700">手续费</view>
+          <view style="font-size:14px;font-weight:900;color:#e0eefc">{{clvData.fee}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="sec">等级权益对照</view>
+    <view class="cw">
+      <view style="padding:6px 13px">
+        <view wx:for="{{clvList}}" wx:key="label"
+              style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid #121e30;{{item.isCurrent ? 'background:#091626;margin:0 -13px;padding:7px 13px' : ''}}">
+          <text class="pl {{item.cls}}" style="width:36px;text-align:center">{{item.label}}</text>
+          <view style="flex:1;min-width:0">
+            <view style="font-size:11px;color:{{item.isCurrent ? '#e0eefc' : '#7090b0'}};font-weight:{{item.isCurrent ? '700' : '500'}}">{{item.perks}}</view>
+            <view style="font-size:10px;color:#2a4060;margin-top:1px;font-weight:600">{{item.score}} · 手续费 {{item.fee}}</view>
+          </view>
+          <text wx:if="{{item.isCurrent}}" style="font-size:10px;color:#5cb8ff;font-weight:800">当前</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="sec">信用记录</view>
+    <view class="cw">
+      <view class="rec-row" wx:for="{{creditLogs}}" wx:key="t">
+        <view class="rec-dot" style="background:#1a4a8a"></view>
+        <view style="flex:1">
+          <view style="font-size:12px;color:#c8d8f0;font-weight:700">{{item.t}}</view>
+          <view style="font-size:10px;color:#3a5878;margin-top:2px;font-weight:600">{{item.d}}</view>
+        </view>
+        <text style="font-size:13px;color:#28e880;font-weight:800">{{item.s}}</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- ===== 钱包 ===== -->
+  <block wx:elif="{{sub === 2}}">
+    <view class="wallet-card">
+      <view style="font-size:11px;color:#5080a0;font-weight:800;letter-spacing:0.06em">企盟积分余额</view>
+      <view class="wallet-bal">{{MY.pointsStr}}</view>
+      <view style="font-size:11px;color:#3a5878;margin-bottom:13px;font-weight:600">流通于企盟生态内 · 不可提现</view>
+      <view class="wallet-grid">
+        <view class="wallet-btn" bindtap="recharge">
+          <view style="font-size:18px;color:#c0d8f0;margin-bottom:3px">＋</view>
+          <view style="font-size:11px;color:#c0d8f0;font-weight:700">充值</view>
+        </view>
+        <view class="wallet-btn" bindtap="goProfit">
+          <view style="font-size:18px;color:#c0d8f0;margin-bottom:3px">¥</view>
+          <view style="font-size:11px;color:#c0d8f0;font-weight:700">分润明细</view>
+        </view>
+        <view class="wallet-btn">
+          <view style="font-size:18px;color:#c0d8f0;margin-bottom:3px">↗</view>
+          <view style="font-size:11px;color:#c0d8f0;font-weight:700">转让</view>
+        </view>
+        <view class="wallet-btn">
+          <view style="font-size:18px;color:#c0d8f0;margin-bottom:3px">≡</view>
+          <view style="font-size:11px;color:#c0d8f0;font-weight:700">流水</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="sec">合伙人会员</view>
+    <view class="cw membership-box">
+      <view class="membership-row">
+        <view>
+          <view class="membership-label">当前身份</view>
+          <view class="membership-role">{{membershipRoleLabel}}</view>
+        </view>
+        <view class="btn bp membership-btn" bindtap="showUpgradeModal">升级合伙人</view>
+      </view>
+      <view class="membership-orders" wx:if="{{membershipOrders.length}}">
+        <view class="membership-order-item" wx:for="{{membershipOrders}}" wx:key="id">
+          <text>{{item.tier}} · {{item.status}}</text>
+          <text class="membership-order-amt">{{item.amountYuan}}元</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="sec">使用规则</view>
+    <view class="cw">
+      <view style="padding:11px 13px">
+        <view wx:for="{{walletRules}}" wx:key="*this"
+              style="display:flex;gap:8px;align-items:flex-start;padding:4px 0;border-bottom:1px solid #121e30">
+          <text style="color:#1e4a8a;font-weight:800">▸</text>
+          <text style="font-size:12px;color:#90b8d8;font-weight:600">{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="sec">积分流水</view>
+    <view class="cw">
+      <view class="rec-row" wx:for="{{walletLogs}}" wx:key="t">
+        <view class="rec-dot" style="background:#1a2a48"></view>
+        <view style="flex:1">
+          <view style="font-size:12px;color:#c8d8f0;font-weight:700">{{item.t}}</view>
+          <view style="font-size:10px;color:#3a5878;margin-top:2px;font-weight:600">{{item.d}}</view>
+        </view>
+        <text style="font-size:14px;font-weight:900;color:{{item.c}}">{{item.v}}</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- ===== 记录 ===== -->
+  <block wx:else>
+    <view class="sec">我的活动记录 ({{myActRecords.length}})</view>
+    <view wx:for="{{myActRecords}}" wx:key="id">
+      <view class="ac" bindtap="openActDetail" data-id="{{item.id}}">
+        <view class="ah">
+          <view class="ad">{{item.date}}　<text class="pl {{item.typeClass}}">{{item.type}}</text>　<text class="pl {{item.statusCls}}">{{item.statusLabel}}</text></view>
+          <view class="at">{{item.title}}</view>
+        </view>
+        <view class="ab">
+          <view class="am">
+            <view>地点：<text style="color:#a8c8e8;font-weight:700">{{item.space}}</text></view>
+            <view>参与：<text style="color:#a8c8e8;font-weight:700">{{item.attendees.length}} 人</text> · 点击查看详情</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="sec">我的任务记录 ({{myTaskRecords.length}})</view>
+    <view wx:for="{{myTaskRecords}}" wx:key="id">
+      <view class="tc" bindtap="openTaskDetail" data-id="{{item.id}}">
+        <view class="tc-head">
+          <view class="tc-title">{{item.title}}</view>
+          <view class="tc-meta">
+            <text class="pl pp">{{item.cat}}</text>
+            <text class="pl pa" wx:if="{{item.isPosted}}">我发布的</text>
+            <text class="pl pf" wx:else>我承接的</text>
+          </view>
+        </view>
+        <view class="tc-body">
+          <view class="tc-footer">
+            <view class="cv">{{item.creditsStr}} <text style="font-size:12px;color:#3a5878;font-weight:600">积分</text></view>
+            <text style="font-size:11px;color:#3a5878;font-weight:600">截止 {{item.deadline}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>
+
+<!-- 名片预览 -->
+<view class="ov" wx:if="{{modal === 'cardPreview'}}" bindtap="closeModal">
+  <view class="mb profile-card-preview-modal" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">我的名片</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <view class="mbody">
+      <view class="pcp-header">
+        <view class="pcp-av-wrap">
+          <image wx:if="{{myAv.imgUrl}}" class="pcp-av-img" src="{{myAv.imgUrl}}" mode="aspectFill" />
+          <view wx:else class="pcp-av" style="background:{{myAv.bg}};color:{{myAv.c}}">
+            <text>{{MY.nameAbbr}}</text>
+          </view>
+        </view>
+        <view class="pcp-name">{{MY.name || '未设置姓名'}}</view>
+        <view class="pcp-sub" wx:if="{{MY.job || MY.co}}">
+          <text wx:if="{{MY.job}}">{{MY.job}}</text>
+          <text wx:if="{{MY.job && MY.co}}"> · </text>
+          <text wx:if="{{MY.co}}">{{MY.co}}</text>
+        </view>
+      </view>
+
+      <view class="pcp-block" wx:if="{{MY.industry}}">
+        <text class="pcp-k">行业</text>
+        <text class="pcp-v">{{MY.industry}}</text>
+      </view>
+      <view class="pcp-block" wx:if="{{myProfile.personalValue}}">
+        <text class="pcp-k">个人价值</text>
+        <text class="pcp-v">{{myProfile.personalValue}}</text>
+      </view>
+      <view class="pcp-block" wx:if="{{myProfile.resourcesText}}">
+        <text class="pcp-k">可提供资源</text>
+        <text class="pcp-v">{{myProfile.resourcesText}}</text>
+      </view>
+      <view class="pcp-block" wx:if="{{myProfile.needsText}}">
+        <text class="pcp-k">当前需求</text>
+        <text class="pcp-v">{{myProfile.needsText}}</text>
+      </view>
+
+      <view class="pcp-actions">
+        <view class="btn bs pcp-btn" bindtap="closeModal">关闭</view>
+        <view class="btn bs pcp-btn" bindtap="saveCardImage">保存图片</view>
+        <button class="btn bp pcp-btn pcp-share-btn" open-type="share" bindtap="prepareCardShare">分享到微信</button>
+      </view>
+    </view>
+  </view>
+</view>
+
+<canvas type="2d" id="cardPosterCanvas" class="pcp-canvas"></canvas>
+
+<!-- 头像选择弹窗 -->
+<view class="ov" wx:if="{{modal === 'avatar'}}" bindtap="closeModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">更换头像</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <view class="mbody">
+      <view style="display:flex;flex-direction:column;align-items:center;margin-bottom:14px">
+        <view class="pav" style="background:{{myAv.bg}};width:60px;height:60px">
+          <text style="color:{{myAv.c}};font-size:18px;font-weight:800">{{MY.nameAbbr}}</text>
+        </view>
+        <view style="font-size:11px;color:#7090b0;margin-top:8px;font-weight:600">点击选择风格</view>
+      </view>
+      <view style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0">
+        <view class="av-opt {{myAv.bg === item.bg ? 'sel' : ''}}" wx:for="{{avOptions}}" wx:key="bg"
+              style="background:{{item.bg}};color:{{item.c}};border-color:{{myAv.bg === item.bg ? '#5cb8ff' : 'transparent'}}"
+              bindtap="pickAvatar" data-idx="{{index}}">
+          {{MY.nameAbbr}}
+        </view>
+      </view>
+      <view style="font-size:12px;color:#7090b0;margin:11px 0 8px;font-weight:700">上传自定义头像</view>
+      <view class="btn bs" bindtap="chooseAvatar">从相册选择</view>
+    </view>
+  </view>
+</view>
+
+<!-- 邀请弹窗 -->
+<view class="ov" wx:if="{{modal === 'invite'}}" bindtap="closeModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">邀请加入企盟</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <view class="mbody">
+      <view style="display:flex;flex-direction:column;align-items:center;padding:6px 0">
+        <view style="width:118px;height:118px;background:#0c1e38;border:1.5px solid #1a3a6a;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
+          <text style="font-size:60px;color:#5cb8ff;line-height:1">▦</text>
+        </view>
+        <text style="font-size:12px;color:#a8c8e8;font-weight:800;margin-bottom:5px">{{MY.name}} 的专属邀请码</text>
+        <text style="font-size:22px;font-weight:900;color:#5cb8ff;letter-spacing:4px;margin-bottom:6px">{{MY.inviteCode}}</text>
+        <text style="font-size:11px;color:#2a4060;margin-bottom:14px;font-weight:600">邀请制入会 · 实名认证</text>
+        <view style="display:flex;gap:7px;width:100%">
+          <view class="btn bs" style="flex:1" bindtap="copyCode">复制链接</view>
+          <view class="btn bp" style="flex:1" bindtap="shareMP">转发小程序</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 升级合伙人：选档位 -->
+<view class="ov" wx:if="{{membershipModal === 'tier'}}" bindtap="closeMembershipModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">选择会员档位</text>
+      <view class="mx" bindtap="closeMembershipModal">×</view>
+    </view>
+    <view class="mbody">
+      <view class="tier-list">
+        <view class="tier-item {{membershipTier === item.key ? 'tier-on' : ''}}"
+              wx:for="{{membershipTiers}}" wx:key="key"
+              bindtap="selectTier" data-tier="{{item.key}}">
+          <view class="tier-name">{{item.name}}</view>
+          <view class="tier-price">{{item.price}}</view>
+        </view>
+      </view>
+      <view class="btn bp" bindtap="confirmOrder">确认下单</view>
+    </view>
+  </view>
+</view>
+
+<!-- 升级合伙人：模拟支付 -->
+<view class="ov" wx:if="{{membershipModal === 'pay'}}" bindtap="closeMembershipModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">订单支付</text>
+      <view class="mx" bindtap="closeMembershipModal">×</view>
+    </view>
+    <view class="mbody">
+      <view class="pay-info" wx:if="{{membershipOrder}}">
+        <view class="pay-row">订单号：{{membershipOrder.id}}</view>
+        <view class="pay-row">档位：{{membershipOrder.tier}}</view>
+        <view class="pay-row pay-amt">应付：{{membershipOrder.amountYuan}} 元</view>
+      </view>
+      <view class="btn bp" bindtap="doMockPay">模拟支付</view>
+    </view>
+  </view>
+</view>
+
+<!-- 充值弹窗 -->
+<view class="ov" wx:if="{{modal === 'recharge'}}" bindtap="closeModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">积分充值</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <view class="mbody">
+      <view class="fg">
+        <text class="fl">充值金额（积分）</text>
+        <input class="fi" type="number" placeholder="请输入正整数" value="{{rechargeAmount}}" bindinput="onRechargeAmount" />
+      </view>
+      <view class="btn bp" bindtap="confirmRecharge">确认充值</view>
+    </view>
+  </view>
+</view>
+
+<!-- 成功提示 -->
+<custom-tab-bar />

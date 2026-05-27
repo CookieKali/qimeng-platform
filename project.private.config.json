@@ -1,0 +1,10 @@
+{
+  "libVersion": "3.4.10",
+  "projectname": "qimeng-platform",
+  "setting": {
+    "urlCheck": false,
+    "useApiHook": false,
+    "useMultiFrameRuntime": false,
+    "compileHotReLoad": false
+  }
+}

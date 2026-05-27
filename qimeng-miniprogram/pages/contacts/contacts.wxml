@@ -1,0 +1,740 @@
+<view class="page-wrap" style="padding-top:{{headerHeight}}px;padding-bottom:{{pageBottom}}px">
+  <!-- 导航栏 -->
+  <view class="nav contacts-nav">
+    <text class="nav-t">通讯录</text>
+    <view class="nav-actions">
+      <view class="inbox-entry" bindtap="goInbox">
+        <view class="inbox-icon-wrap">
+          <text class="sym-icon inbox-envelope-sym">✉️</text>
+          <view class="inbox-badge" wx:if="{{inboxUnreadCount > 0}}">
+            <text class="inbox-badge-num">{{inboxUnreadCount > 99 ? '99+' : inboxUnreadCount}}</text>
+          </view>
+        </view>
+        <text class="inbox-label">消息</text>
+      </view>
+      <view class="pending-entry" bindtap="showPendingModal">
+        <view class="pending-icon-wrap">
+          <text class="sym-icon pending-entry-sym">🤝</text>
+          <view class="pending-badge" wx:if="{{pendingRequests.length > 0}}">
+            <text class="pending-badge-num">{{pendingRequests.length > 99 ? '99+' : pendingRequests.length}}</text>
+          </view>
+        </view>
+        <text class="pending-label">申请</text>
+      </view>
+      <view class="nav-btn" bindtap="showInviteModal">邀请 +</view>
+    </view>
+  </view>
+
+  <!-- Tab：全部 / 好友 / 活动圈 -->
+  <view class="seg contacts-tabs">
+    <view class="sb2 {{contactsTab === 'all' ? 'on' : ''}}" bindtap="switchContactsTab" data-tab="all">全部成员</view>
+    <view class="sb2 {{contactsTab === 'friends' ? 'on' : ''}}" bindtap="switchContactsTab" data-tab="friends">好友</view>
+    <view class="sb2 {{contactsTab === 'circle' ? 'on' : ''}}" bindtap="switchContactsTab" data-tab="circle">活动圈</view>
+  </view>
+
+  <!-- 顶部：搜索 + 筛选（仅全部成员） -->
+  <view class="contacts-top" wx:if="{{contactsTab === 'all'}}">
+    <view class="sw contacts-search">
+      <view class="si-wrap">
+        <text class="sym-icon search-sym">🔍</text>
+        <input
+          class="si"
+          placeholder="搜索姓名/公司/任务/活动"
+          placeholder-class="si-ph"
+          value="{{searchKeyword}}"
+          bindfocus="onSearchFocus"
+          bindinput="onSearchInput"
+          bindconfirm="onSearchConfirm"
+        />
+        <text class="search-inline-cancel" wx:if="{{searchPanelOpen}}" catchtap="closeSearchPanel">取消</text>
+      </view>
+    </view>
+    <view class="filter-bar contacts-filters">
+      <view class="fbtn {{fst.region !== '全部' ? 'act' : ''}}" bindtap="toggleFilter" data-key="region">
+        地区{{fst.region !== '全部' ? '·' + fst.region : ''}} ▾
+      </view>
+      <view class="fbtn {{fst.industry !== '全部' ? 'act' : ''}}" bindtap="toggleFilter" data-key="industry">
+        行业{{fst.industry !== '全部' ? '·' + fst.industry : ''}} ▾
+      </view>
+      <view class="fbtn {{fst.role !== '全部' ? 'act' : ''}}" bindtap="toggleFilter" data-key="role">
+        职务{{fst.role !== '全部' ? '·' + fst.role : ''}} ▾
+      </view>
+    </view>
+    <view class="fdrop" wx:if="{{openFilter === 'region'}}">
+      <view class="ft {{fst.region === item ? 'on' : ''}}" wx:for="{{regions}}" wx:key="*this"
+            bindtap="setFilter" data-key="region" data-value="{{item}}">{{item}}</view>
+    </view>
+    <view class="fdrop" wx:if="{{openFilter === 'industry'}}">
+      <view class="ft {{fst.industry === item ? 'on' : ''}}" wx:for="{{industries}}" wx:key="*this"
+            bindtap="setFilter" data-key="industry" data-value="{{item}}">{{item}}</view>
+    </view>
+    <view class="fdrop" wx:if="{{openFilter === 'role'}}">
+      <view class="ft {{fst.role === item ? 'on' : ''}}" wx:for="{{roles}}" wx:key="*this"
+            bindtap="setFilter" data-key="role" data-value="{{item}}">{{item}}</view>
+    </view>
+  </view>
+
+  <!-- 本页全局搜索（人员 / 任务 / 活动） -->
+  <view class="contacts-search-panel" wx:if="{{searchPanelOpen && contactsTab === 'all'}}" catchtap="stopProp">
+    <block wx:if="{{!searchSearched}}">
+      <view class="csp-history" wx:if="{{searchHistory.length > 0}}">
+        <view class="csp-history-hd">
+          <text class="csp-history-title">历史搜索</text>
+          <text class="csp-history-clear" bindtap="clearSearchHistory">清除</text>
+        </view>
+        <view class="csp-history-tags">
+          <view
+            class="csp-history-tag"
+            wx:for="{{searchHistory}}"
+            wx:key="*this"
+            bindtap="onSearchHistoryTap"
+            data-kw="{{item}}"
+          >{{item}}</view>
+        </view>
+      </view>
+      <view class="csp-hint" wx:else>输入关键词搜索人员、任务与活动</view>
+    </block>
+    <view class="csp-loading" wx:elif="{{searchLoading}}">搜索中…</view>
+    <view class="csp-empty" wx:elif="{{searchTotal === 0}}">未找到相关内容，换个词试试</view>
+    <block wx:else>
+      <view class="csp-sec" wx:if="{{searchUsers.length > 0}}">
+        <view class="csp-sec-title">人员</view>
+        <view class="csp-list">
+          <view
+            class="csp-row"
+            wx:for="{{searchUsers}}"
+            wx:key="id"
+            bindtap="openSearchUser"
+            data-id="{{item.id}}"
+            hover-class="csp-row-press"
+          >
+            <view class="csp-av" style="background:{{item.bg}};color:{{item.c}};border-color:{{item.bc}}">
+              <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" class="contact-av-img" mode="aspectFill" />
+              <text wx:else>{{item.nameAbbr}}</text>
+            </view>
+            <view class="csp-main">
+              <view class="csp-title">{{item.name}}</view>
+              <view class="csp-sub">{{item.job}}<text wx:if="{{item.job && item.co}}"> · </text>{{item.co}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="csp-sec" wx:if="{{searchTasks.length > 0}}">
+        <view class="csp-sec-title">任务</view>
+        <view class="csp-list">
+          <view
+            class="csp-row"
+            wx:for="{{searchTasks}}"
+            wx:key="id"
+            bindtap="openSearchTask"
+            data-id="{{item.id}}"
+            hover-class="csp-row-press"
+          >
+            <view class="csp-main">
+              <view class="csp-title">{{item.title}}</view>
+              <view class="csp-sub">
+                <text class="csp-credits">{{item.creditsStr}} 积分</text>
+                <text class="pl {{item.statusCls}}" style="margin-left:6px">{{item.statusLabel}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="csp-sec" wx:if="{{searchActivities.length > 0}}">
+        <view class="csp-sec-title">活动</view>
+        <view class="csp-list">
+          <view
+            class="csp-row"
+            wx:for="{{searchActivities}}"
+            wx:key="id"
+            bindtap="openSearchActivity"
+            data-id="{{item.id}}"
+            hover-class="csp-row-press"
+          >
+            <view class="csp-main">
+              <view class="csp-title">{{item.title}}</view>
+              <view class="csp-sub">{{item.date}}<text wx:if="{{item.date && item.location}}"> · </text>{{item.location}}</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 加载 / 错误 -->
+  <view wx:if="{{loading && contactsTab === 'all' && !searchPanelOpen}}">
+    <view class="skeleton-card" wx:for="{{[1,2,3]}}" wx:key="*this">
+      <view class="skeleton-card-inner">
+        <view class="skeleton-avatar"></view>
+        <view class="skeleton-lines">
+          <view class="skeleton-line skeleton-line-wide"></view>
+          <view class="skeleton-line skeleton-line-narrow"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="state-box state-err" wx:elif="{{loadError && contactsTab === 'all' && !searchPanelOpen}}">
+    <text>{{loadError}}</text>
+    <view class="btn bp btn-retry" bindtap="_load">点击重试</view>
+  </view>
+
+  <!-- 全部成员 -->
+  <block wx:elif="{{contactsTab === 'all' && !loading && !loadError && !searchPanelOpen}}">
+    <view class="sec contacts-sec">全部成员 ({{filteredMembers.length}})</view>
+    <view class="contacts-list">
+      <view class="empty-state" wx:if="{{filteredMembers.length === 0}}">
+        <view class="empty-icon"><text class="sym-icon">📇</text></view>
+        <view class="empty-text">暂无成员，换个筛选条件试试</view>
+      </view>
+      <view
+        class="contact-row"
+        wx:for="{{filteredMembers}}"
+        wx:key="id"
+        hover-class="contact-row-press"
+        hover-stay-time="80"
+        bindtap="showMember"
+        data-id="{{item.id}}"
+      >
+        <view class="contact-av-wrap">
+          <view class="contact-av" style="background:{{item.bg}};color:{{item.c}};border-color:{{item.bc}}">
+            <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" class="contact-av-img" mode="aspectFill" />
+            <text wx:else>{{item.nameAbbr}}</text>
+          </view>
+          <view wx:if="{{item.lvBadgeClass}}" class="lv-corner {{item.lvBadgeClass}}">{{item.creditLv}}</view>
+        </view>
+        <view class="contact-main">
+          <view class="contact-name">{{item.name}}</view>
+          <view class="contact-sub">{{item.job}}<text wx:if="{{item.job && item.co}}"> · </text>{{item.co}}</view>
+          <view class="contact-tags">
+            <text class="contact-tag tag-credit">诚信 {{item.creditLv}}</text>
+            <text class="contact-tag tag-paid" wx:if="{{item.isPaid}}">付费</text>
+            <text class="contact-tag tag-friend" wx:if="{{item.isFriend}}">好友</text>
+            <text class="contact-tag tag-pending" wx:elif="{{item.requestSent}}">待确认</text>
+            <text class="contact-tag tag-incoming" wx:elif="{{item.pendingIn}}">待接受</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 好友列表 -->
+  <block wx:elif="{{contactsTab === 'friends'}}">
+    <view class="sec contacts-sec">我的好友 ({{displayFriends.length}})</view>
+    <view class="friend-group-bar">
+      <view class="fgb-btn {{friendGroupMode === 'group' ? 'on' : ''}}" bindtap="switchFriendGroupMode" data-mode="group">分组</view>
+      <view class="fgb-btn {{friendGroupMode === 'region' ? 'on' : ''}}" bindtap="switchFriendGroupMode" data-mode="region">地区</view>
+      <view class="fgb-btn {{friendGroupMode === 'industry' ? 'on' : ''}}" bindtap="switchFriendGroupMode" data-mode="industry">行业</view>
+      <view class="fgb-btn {{friendGroupMode === 'role' ? 'on' : ''}}" bindtap="switchFriendGroupMode" data-mode="role">职务</view>
+    </view>
+    <view class="contacts-list">
+      <view class="empty-inline" wx:if="{{displayFriends.length === 0}}">
+        <view class="empty-icon"><text class="sym-icon">👥</text></view>
+        <view class="empty-title">暂无好友</view>
+        <view class="empty-desc">互换名片后可在此查看</view>
+      </view>
+      <block wx:else>
+        <view class="friend-group-block" wx:for="{{friendGroups}}" wx:key="key" wx:for-item="group">
+          <view class="friend-group-hd">{{group.title}} · {{group.count}}</view>
+          <view
+            class="contact-row"
+            wx:for="{{group.items}}"
+            wx:key="id"
+            wx:for-item="item"
+            hover-class="contact-row-press"
+            hover-stay-time="80"
+            bindtap="showMember"
+            data-id="{{item.id}}"
+          >
+            <view class="contact-av-wrap">
+              <view class="contact-av" style="background:{{item.bg}};color:{{item.c}};border-color:{{item.bc}}">
+                <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" class="contact-av-img" mode="aspectFill" />
+                <text wx:else>{{item.nameAbbr}}</text>
+              </view>
+            </view>
+            <view class="contact-main">
+              <view class="contact-name">{{item.name}}</view>
+              <view class="contact-sub">{{item.job}}<text wx:if="{{item.job && item.co}}"> · </text>{{item.co}}</view>
+              <view class="contact-tags">
+                <text class="contact-tag tag-friend">好友</text>
+                <text class="contact-tag tag-group" wx:if="{{friendGroupMode !== 'group' && item.group}}">{{item.group}}</text>
+                <text class="contact-tag tag-region" wx:if="{{friendGroupMode !== 'region' && item.region}}">{{item.region}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </block>
+
+  <!-- 活动圈 -->
+  <block wx:else>
+    <view class="sec contacts-sec">活动圈 ({{activityCircle.length}})</view>
+    <view class="circle-hint">共同参加过活动、尚未互加好友的人脉</view>
+    <view class="sk-list" wx:if="{{activityCircleLoading}}">
+      <view class="sk-row" wx:for="{{[1,2,3,4]}}" wx:key="*this"></view>
+    </view>
+    <view class="contacts-list" wx:else>
+      <view class="empty-inline" wx:if="{{activityCircle.length === 0}}">
+        <view class="empty-icon"><text class="sym-icon">🌐</text></view>
+        <view class="empty-title">暂无活动圈人脉</view>
+        <view class="empty-desc">报名活动后可发现同场参与者</view>
+      </view>
+      <view
+        class="contact-row circle-row"
+        wx:for="{{activityCircle}}"
+        wx:key="id"
+        hover-class="contact-row-press"
+        hover-stay-time="80"
+        bindtap="showMember"
+        data-id="{{item.id}}"
+        data-expired="{{item.is_expired ? 1 : 0}}"
+      >
+        <view class="contact-av-wrap">
+          <view class="contact-av" style="background:{{item.bg}};color:{{item.c}};border-color:{{item.bc}}">
+            <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" class="contact-av-img" mode="aspectFill" />
+            <text wx:else>{{item.nameAbbr}}</text>
+          </view>
+        </view>
+        <view class="contact-main">
+          <view class="contact-name">{{item.name}}</view>
+          <view class="contact-sub" wx:if="{{item.job || item.co}}">{{item.job}}<text wx:if="{{item.job && item.co}}"> · </text>{{item.co}}</view>
+          <view class="circle-meta">共同活动：{{item.activity_name}} · 相识 {{item.joined_at}}</view>
+          <view class="circle-protected" wx:if="{{item.is_expired}}">已保护 · 相识超过15天信息已脱敏</view>
+        </view>
+        <view class="circle-action">
+          <view class="btn bw btn-sm" catchtap="addFriendFromCircle" data-id="{{item.id}}">申请加好友</view>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>
+
+<!-- ============ 弹窗区域 ============ -->
+
+<!-- 好友申请 -->
+<view class="ov" wx:if="{{modal === 'pending'}}" bindtap="closeModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">好友申请{{pendingRequests.length ? ' · ' + pendingRequests.length : ''}}</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <view class="mbody">
+      <view wx:if="{{pendingRequests.length === 0}}" class="pending-empty">
+        暂无新的好友申请
+      </view>
+      <view wx:for="{{pendingRequests}}" wx:key="from_user_id" class="req-card">
+        <view class="contact-av" style="background:{{item.bg}};color:{{item.c}};border-color:{{item.bc}}">
+          <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" class="contact-av-img" mode="aspectFill" />
+          <text wx:else>{{item.nameAbbr}}</text>
+        </view>
+        <view class="req-body">
+          <view class="contact-name">{{item.name}}</view>
+          <view class="contact-sub">{{item.job}}</view>
+          <view class="req-msg" wx:if="{{item.msg}}">{{item.msg}}</view>
+        </view>
+        <view class="req-actions">
+          <view class="btn bw btn-sm" bindtap="acceptRequest" data-id="{{item.from}}">接受</view>
+          <view class="btn br btn-sm" bindtap="rejectRequest" data-id="{{item.from}}">忽略</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 新用户引导 -->
+<view class="ov contacts-guide-ov" wx:if="{{modal === 'guide'}}" bindtap="closeProfileGuide">
+  <view class="mb guide-modal" catchtap="stopProp">
+    <view class="guide-modal-body">
+      <text class="guide-title">欢迎加入企盟 🎉</text>
+      <text class="guide-desc">完善你的名片资料，让更多人认识你</text>
+      <view class="guide-steps">
+        <view class="guide-step">
+          <text class="guide-step-num">1</text>
+          <text class="guide-step-text">填写职位行业</text>
+        </view>
+        <text class="guide-step-arrow">→</text>
+        <view class="guide-step">
+          <text class="guide-step-num">2</text>
+          <text class="guide-step-text">添加资源/需求</text>
+        </view>
+        <text class="guide-step-arrow">→</text>
+        <view class="guide-step">
+          <text class="guide-step-num">3</text>
+          <text class="guide-step-text">开始拓展人脉</text>
+        </view>
+      </view>
+      <view class="guide-actions">
+        <view class="btn bs guide-btn-later" bindtap="closeProfileGuide">稍后再说</view>
+        <view class="btn bp guide-btn-primary" bindtap="goProfileGuideEdit">立即完善</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 邀请弹窗 -->
+<view class="ov" wx:if="{{modal === 'invite'}}" bindtap="closeModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">邀请加入企盟</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <view class="mbody">
+      <view style="display:flex;flex-direction:column;align-items:center;padding:6px 0">
+        <view style="width:118px;height:118px;background:#0c1e38;border:1.5px solid #1a3a6a;border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
+          <text style="font-size:60px;color:#5cb8ff;line-height:1">▦</text>
+        </view>
+        <text style="font-size:12px;color:#a8c8e8;font-weight:800;margin-bottom:5px">{{MY.name}} 的专属邀请码</text>
+        <text style="font-size:22px;font-weight:900;color:#5cb8ff;letter-spacing:4px;margin-bottom:6px">{{MY.inviteCode}}</text>
+        <text style="font-size:11px;color:#2a4060;margin-bottom:14px;font-weight:600">邀请制入会 · 实名认证</text>
+        <view style="display:flex;gap:7px;width:100%">
+          <view class="btn bs" style="flex:1" bindtap="copyInviteCode">复制链接</view>
+          <view class="btn bp" style="flex:1" bindtap="shareProgram">转发小程序</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 数字名片（居中弹窗） -->
+<view class="card-drawer-mask dcard-modal-mask {{drawerOpen ? 'show' : ''}}" wx:if="{{selectedMember && !modal}}" bindtap="closeModal">
+  <view class="card-drawer dcard dcard-modal {{drawerOpen ? 'open' : ''}}" catchtap="stopProp">
+    <view class="dcard-topbar">
+      <text class="dcard-brand">企盟 · 数字名片</text>
+      <view class="dcard-close" bindtap="closeModal">×</view>
+    </view>
+
+    <scroll-view
+      class="card-drawer-body dcard-scroll"
+      scroll-y
+      enhanced
+      show-scrollbar
+      enable-flex
+    >
+      <view class="dcard-profile">
+        <view class="dcard-av-wrap">
+          <image wx:if="{{selectedMemberProfile.avatarUrl}}" class="dcard-av-img" src="{{selectedMemberProfile.avatarUrl}}" mode="aspectFill" />
+          <view wx:else class="dcard-av" style="background:{{selectedMember.bg}};color:{{selectedMember.c}};border-color:{{selectedMember.bc}}">
+            <text>{{selectedMember.nameAbbr}}</text>
+          </view>
+        </view>
+        <view class="dcard-name">{{selectedMember.name}}</view>
+        <view class="dcard-headline" wx:if="{{selectedMemberProfile.headline}}">{{selectedMemberProfile.headline}}</view>
+        <view class="dcard-profile-co" wx:if="{{selectedMember.co && !(selectedMember.isFriend && selectedMemberProfile.companyFull)}}">
+          <view class="contact-icon-box dcard-profile-co-icon">
+            <text class="sym-icon contact-sym">🏢</text>
+          </view>
+          <text class="dcard-profile-co-text">{{selectedMember.co}}</text>
+        </view>
+        <view class="dcard-tags">
+          <text class="dcard-tag dcard-tag-gold">{{selectedMemberProfile.roleLabel}}</text>
+          <text class="dcard-tag dcard-tag-credit">靠谱度 {{selectedMember.creditLv}}</text>
+          <text class="dcard-tag dcard-tag-friend" wx:if="{{selectedMember.isFriend}}">好友</text>
+        </view>
+      </view>
+
+      <view class="dcard-block" wx:if="{{selectedMemberProfile.personalValue}}">
+        <view class="dcard-label">个人价值</view>
+        <view class="dcard-text">{{selectedMemberProfile.personalValue}}</view>
+      </view>
+
+      <view class="dcard-block" wx:if="{{selectedMemberProfile.industryText}}">
+        <view class="dcard-label">行业</view>
+        <view class="dcard-text">{{selectedMemberProfile.industryText}}</view>
+      </view>
+
+      <view class="dcard-block" wx:if="{{selectedMemberProfile.talentsText}}">
+        <view class="dcard-label">核心能力</view>
+        <view class="dcard-text">{{selectedMemberProfile.talentsText}}</view>
+      </view>
+
+      <view class="dcard-block" wx:if="{{selectedMemberProfile.resourcesText}}">
+        <view class="dcard-label">可提供资源</view>
+        <view class="dcard-text">{{selectedMemberProfile.resourcesText}}</view>
+      </view>
+
+      <view class="dcard-block" wx:if="{{selectedMemberProfile.needsText}}">
+        <view class="dcard-label">当前需求</view>
+        <view class="dcard-text">{{selectedMemberProfile.needsText}}</view>
+      </view>
+
+      <block wx:if="{{selectedMemberProfile.portfolio.length > 0}}">
+        <view class="dcard-portfolio-hd">商业版图</view>
+        <view class="dcard-portfolio-item" wx:for="{{selectedMemberProfile.portfolio}}" wx:key="index">
+          <view class="dcard-portfolio-cat">{{item.category}}</view>
+          <view class="dcard-portfolio-role" wx:if="{{item.role}}">{{item.role}}</view>
+          <view class="dcard-portfolio-line" wx:if="{{item.mainBiz}}"><text class="dcard-k">主营</text>{{item.mainBiz}}</view>
+          <view class="dcard-portfolio-line" wx:if="{{item.products}}"><text class="dcard-k">产品</text>{{item.products}}</view>
+        </view>
+      </block>
+
+      <block wx:if="{{selectedMember.isFriend && selectedMemberProfile.showContact}}">
+        <view class="dcard-block dcard-contact">
+          <view class="dcard-label">联系方式</view>
+          <view class="drawer-contact-row" wx:if="{{selectedMemberProfile.phone}}" bindtap="callPhone">
+            <view class="contact-icon-box">
+              <text class="sym-icon contact-sym">📞</text>
+            </view>
+            <view class="drawer-contact-body">
+              <view class="drawer-contact-k">手机号</view>
+              <view class="drawer-contact-v">{{selectedMemberProfile.phone}}</view>
+            </view>
+          </view>
+          <view class="drawer-contact-row" wx:if="{{selectedMemberProfile.email}}" bindtap="copyEmail">
+            <view class="contact-icon-box">
+              <text class="sym-icon contact-sym">✉️</text>
+            </view>
+            <view class="drawer-contact-body">
+              <view class="drawer-contact-k">邮箱</view>
+              <view class="drawer-contact-v">{{selectedMemberProfile.email}}</view>
+            </view>
+          </view>
+          <view class="drawer-contact-row" wx:if="{{selectedMemberProfile.companyFull}}">
+            <view class="contact-icon-box">
+              <text class="sym-icon contact-sym">🏢</text>
+            </view>
+            <view class="drawer-contact-body">
+              <view class="drawer-contact-k">公司</view>
+              <view class="drawer-contact-v">{{selectedMemberProfile.companyFull}}</view>
+            </view>
+          </view>
+        </view>
+      </block>
+      <view class="dcard-privacy-bar" wx:elif="{{!selectedMember.isFriend}}">
+        <text class="sym-icon dcard-privacy-sym">🔒</text>
+        <text class="dcard-privacy-text">联系方式互换名片后可见</text>
+      </view>
+
+      <view class="dcard-qr-wrap">
+        <image
+          class="dcard-qr-img"
+          src="{{selectedMemberProfile.qrCodeUrl}}"
+          mode="aspectFit"
+          wx:if="{{selectedMemberProfile.qrCodeUrl}}"
+        />
+        <view class="dcard-qr" wx:else></view>
+        <view class="dcard-qr-hint">扫码查看名片</view>
+      </view>
+    </scroll-view>
+
+    <view class="card-drawer-ft dcard-ft">
+      <!-- 已是好友 -->
+      <block wx:if="{{selectedMember.isFriend}}">
+        <view class="btn bs card-ft-btn" bindtap="shareCard" data-id="{{selectedMember.id}}">转发名片</view>
+        <view class="btn bs card-ft-btn" bindtap="sendMessage">发消息</view>
+      </block>
+      <!-- 对方已向我申请 -->
+      <block wx:elif="{{selectedMember.pendingIn}}">
+        <view class="card-hint-bar hint-bar-green">对方想与你互换名片</view>
+        <view class="dcard-ft-actions">
+          <view class="btn bw card-ft-btn" bindtap="acceptPendingInDrawer">接受互换</view>
+          <view class="btn bs card-ft-btn" bindtap="dismissPendingInDrawer">暂时忽略</view>
+        </view>
+      </block>
+      <!-- 已发出申请 -->
+      <block wx:elif="{{selectedMember.requestSent}}">
+        <view class="card-hint-bar hint-bar-yellow">申请已发出，等待对方确认</view>
+        <view class="btn bs card-ft-btn card-ft-disabled">等待中</view>
+      </block>
+      <!-- 陌生人 -->
+      <block wx:else>
+        <view class="btn bp card-ft-btn card-ft-primary" bindtap="exchangeCard" data-id="{{selectedMember.id}}">申请互换名片</view>
+        <view class="btn bs card-ft-btn" bindtap="saveCard" data-id="{{selectedMember.id}}" wx:if="{{!selectedMember.isSaved}}">保存名片</view>
+        <view class="btn bs card-ft-btn" bindtap="unsaveCard" data-id="{{selectedMember.id}}" wx:else>已保存名片</view>
+      </block>
+    </view>
+  </view>
+</view>
+
+<!-- 搜索 · 任务详情 -->
+<view class="ov contacts-sub-modal" wx:if="{{modal === 'taskDetail' && selectedTask}}" bindtap="closeModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">任务详情</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <view class="mbody">
+      <view class="hb">
+        <view style="font-size:14px;font-weight:800;color:#e0eefc;margin-bottom:7px">{{selectedTask.title}}</view>
+        <view style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px">
+          <text class="pl pp">{{selectedTask.cat}}</text>
+          <text class="pl {{selectedTask.statusCls}}">{{selectedTask.statusLabel}}</text>
+        </view>
+        <view style="font-size:11px;color:#7090b0;line-height:2.1;font-weight:500">
+          <view>截止：<text style="color:#a8c8e8;font-weight:700">{{selectedTask.deadline}}</text></view>
+          <view>名额：<text style="color:#a8c8e8;font-weight:700">{{selectedTask.joined}}/{{selectedTask.quota}} 人</text></view>
+          <view>靠谱度门槛：<text style="color:#a8c8e8;font-weight:700">{{selectedTask.minLv}} 级</text></view>
+        </view>
+      </view>
+      <view style="font-size:11px;color:#3a5878;font-weight:800;margin-bottom:6px">任务描述</view>
+      <view style="font-size:12px;color:#8aa8c8;line-height:1.85;margin-bottom:14px;font-weight:500">{{selectedTask.desc}}</view>
+      <view class="btn bs" bindtap="goTasksTab">前往任务广场</view>
+    </view>
+  </view>
+</view>
+
+<!-- 搜索 · 活动详情 -->
+<view class="ov contacts-sub-modal" wx:if="{{modal === 'activityDetail' && selectedActivity}}" bindtap="closeModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">活动详情</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <view class="mbody">
+      <view class="hb">
+        <view style="font-size:14px;font-weight:800;color:#e0eefc;margin-bottom:6px">{{selectedActivity.title}}</view>
+        <view style="display:flex;gap:5px;margin-bottom:8px">
+          <text class="pl {{selectedActivity.typeClass}}">{{selectedActivity.type}}</text>
+          <text class="pl {{selectedActivity.statusCls}}">{{selectedActivity.statusLabel}}</text>
+        </view>
+        <view style="font-size:11px;color:#7090b0;line-height:2;font-weight:500">
+          <view>时间：<text style="color:#a8c8e8;font-weight:700">{{selectedActivity.date}}</text></view>
+          <view>地点：<text style="color:#a8c8e8;font-weight:700">{{selectedActivity.space}}</text></view>
+          <view>报名：<text style="color:#a8c8e8;font-weight:700">{{selectedActivity.signups}}/{{selectedActivity.seats}} 人</text></view>
+        </view>
+      </view>
+      <view style="font-size:11px;color:#3a5878;font-weight:800;margin-bottom:6px">活动简介</view>
+      <view style="font-size:12px;color:#8aa8c8;line-height:1.85;margin-bottom:14px;font-weight:500">{{selectedActivity.desc}}</view>
+      <view class="btn bp" wx:if="{{selectedActivity.status === 'upcoming' && !selectedActivity.isJoined}}"
+            bindtap="confirmSearchActivitySignup" data-id="{{selectedActivity.id}}">报名活动</view>
+      <view class="btn bs" wx:elif="{{selectedActivity.isJoined}}">已报名</view>
+      <view class="btn bs" bindtap="goTasksTab">在任务&活动页查看</view>
+    </view>
+  </view>
+</view>
+
+<!-- 分享名片弹窗（层级高于名片，打开时隐藏名片层） -->
+<view class="ov contacts-layer-ov share-card-ov" wx:if="{{modal === 'share'}}" bindtap="closeModal">
+  <view class="mb share-modal" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">转发名片</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <view class="mbody">
+      <view class="share-preview-hint">↓ 对方将看到的名片</view>
+      <view class="preview-card share-preview-card">
+        <view class="share-preview-head">
+          <view class="share-preview-av-wrap">
+            <image
+              wx:if="{{shareTarget.avatarUrl}}"
+              class="share-preview-av-img"
+              src="{{shareTarget.avatarUrl}}"
+              mode="aspectFill"
+            />
+            <view
+              wx:else
+              class="av share-preview-av"
+              style="background:{{shareTarget.bg}};color:{{shareTarget.c}}"
+            >
+              <text>{{shareTarget.nameAbbr}}</text>
+            </view>
+          </view>
+          <view class="share-preview-info">
+            <view class="pc-name">{{shareTarget.name}}</view>
+            <view class="pc-sub" wx:if="{{shareTarget.job || shareTarget.co}}">
+              <text wx:if="{{shareTarget.job}}">{{shareTarget.job}}</text>
+              <text wx:if="{{shareTarget.job && shareTarget.co}}"> · </text>
+              <text wx:if="{{shareTarget.co}}">{{shareTarget.co}}</text>
+            </view>
+          </view>
+        </view>
+        <view class="share-preview-meta">
+          <view class="pc-row"><text class="pc-k">会员等级</text>{{shareTarget.lv}}</view>
+          <view class="pc-row"><text class="pc-k">所在地区</text>{{shareTarget.region}}</view>
+        </view>
+      </view>
+
+      <view class="share-sec-t">发送给企盟好友</view>
+      <view class="share-search-wrap">
+        <text class="sym-icon search-sym">🔍</text>
+        <input
+          class="share-search-input"
+          placeholder="搜索好友姓名、职务..."
+          placeholder-class="share-search-ph"
+          value="{{shareSearch}}"
+          bindinput="onShareSearch"
+        />
+      </view>
+
+      <view class="share-friend-empty" wx:if="{{friendsList.length === 0}}">暂无好友，可先互换名片</view>
+      <view class="share-friend-empty" wx:elif="{{shareFilteredFriends.length === 0}}">未找到匹配好友</view>
+      <view class="share-friend-list" wx:else>
+        <view
+          class="share-friend-row {{item.selected ? 'on' : ''}}"
+          wx:for="{{shareFilteredFriends}}"
+          wx:key="id"
+          bindtap="toggleShareFriend"
+          data-id="{{item.id}}"
+        >
+          <view class="share-friend-av-wrap">
+            <image
+              wx:if="{{item.avatarUrl}}"
+              class="share-friend-av-img"
+              src="{{item.avatarUrl}}"
+              mode="aspectFill"
+            />
+            <view wx:else class="av share-friend-av" style="background:{{item.bg}};color:{{item.c}}">
+              <text>{{item.nameAbbr}}</text>
+            </view>
+          </view>
+          <view class="share-friend-info">
+            <view class="share-friend-name">{{item.name}}</view>
+            <view class="share-friend-job">{{item.job}}</view>
+          </view>
+          <view class="share-friend-check" wx:if="{{item.selected}}">✓</view>
+        </view>
+      </view>
+
+      <view class="share-actions">
+        <view
+          class="btn bp share-action-btn share-action-primary {{shareSelectedIds.length === 0 ? 'share-action-disabled' : ''}}"
+          bindtap="sendCardTo"
+        >发送给选中好友</view>
+        <view class="share-actions-row">
+          <button class="btn bs share-action-btn share-action-secondary share-wx-btn" open-type="share">微信转发</button>
+          <view class="btn bs share-action-btn share-action-secondary" bindtap="genPoster">生成海报</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 智能匹配结果弹窗 -->
+<view class="ov" wx:if="{{modal === 'match'}}" bindtap="closeModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">智能匹配结果</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <view class="mbody">
+      <view class="match-summary">{{matchResult.summary}}</view>
+      <view wx:if="{{matchResult.users.length > 0}}">
+        <view class="match-sec-t">推荐人脉</view>
+        <view class="match-row match-row-tap" wx:for="{{matchResult.users}}" wx:key="id"
+              bindtap="openMatchUser" data-id="{{item.id}}">
+          <text class="match-name">{{item.name}}</text>
+          <text class="match-meta">{{item.company}} · 匹配度 {{item.score}}</text>
+        </view>
+      </view>
+      <view wx:if="{{matchResult.tasks.length > 0}}">
+        <view class="match-sec-t">推荐任务</view>
+        <view class="match-row match-row-tap" wx:for="{{matchResult.tasks}}" wx:key="id"
+              bindtap="openMatchTask" data-id="{{item.id}}">
+          <text class="match-name">{{item.title}}</text>
+          <text class="match-meta">匹配度 {{item.score}}</text>
+        </view>
+      </view>
+      <view wx:if="{{matchResult.activities.length > 0}}">
+        <view class="match-sec-t">推荐活动</view>
+        <view class="match-row match-row-tap" wx:for="{{matchResult.activities}}" wx:key="id"
+              bindtap="openMatchActivity" data-id="{{item.id}}">
+          <text class="match-name">{{item.title}}</text>
+          <text class="match-meta">{{item.location}}</text>
+        </view>
+      </view>
+      <view class="btn bp" style="margin-top:14px" bindtap="closeModal">知道了</view>
+    </view>
+  </view>
+</view>
+
+<custom-tab-bar />
+

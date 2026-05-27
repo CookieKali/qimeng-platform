@@ -1,0 +1,223 @@
+.login-page {
+  min-height: 100vh;
+  width: 100%;
+  background: var(--qm-bg, #0a0b0f);
+  box-sizing: border-box;
+}
+
+.login-scroll {
+  height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.login-safe-top {
+  width: 100%;
+}
+
+.login-body {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px 20px calc(32px + env(safe-area-inset-bottom));
+  position: relative;
+  z-index: 1;
+}
+
+.login-bg {
+  position: fixed;
+  border-radius: 999px;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+}
+.login-bg-a {
+  width: 280px;
+  height: 280px;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.35), rgba(59, 130, 246, 0));
+  top: -80px;
+  right: -80px;
+}
+.login-bg-b {
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(circle, rgba(52, 211, 153, 0.2), rgba(52, 211, 153, 0));
+  left: -80px;
+  bottom: 60px;
+}
+
+.brand-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  width: 100%;
+}
+.brand-text {
+  flex: 1;
+  min-width: 0;
+}
+.brand-mark {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--qm-accent, #3b82f6) 0%, #2563eb 100%);
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #F1F3F9;
+  font-size: 24px;
+  font-weight: 900;
+}
+.login-logo {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--qm-text);
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+.login-sub {
+  font-size: 13px;
+  color: #9499B0;
+  margin-top: 8px;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.login-panel {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--qm-surface);
+  border: 1px solid var(--qm-border);
+  border-radius: 24px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+  padding: 28px 22px;
+}
+.panel-title {
+  font-size: 20px;
+  color: var(--qm-text);
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.panel-desc {
+  font-size: 13px;
+  color: var(--qm-accent-light);
+  line-height: 1.6;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+.panel-hint {
+  font-size: 12px;
+  color: var(--qm-text-secondary);
+  line-height: 1.5;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+.api-hint {
+  font-size: 11px;
+  color: #4A4D65;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  word-break: break-all;
+}
+
+.field-wrap {
+  width: 100%;
+  margin-bottom: 14px;
+  box-sizing: border-box;
+}
+.field-label {
+  display: block;
+  font-size: 13px;
+  color: #9499B0;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.login-field {
+  display: block;
+  width: 100%;
+  height: 52px;
+  line-height: 52px;
+  box-sizing: border-box;
+  background: var(--qm-bg);
+  border: 1.5px solid var(--qm-border-strong);
+  border-radius: 12px;
+  padding: 0 16px;
+  font-size: 15px;
+  color: var(--qm-text);
+}
+
+.login-btn {
+  width: 100%;
+  height: 52px;
+  margin-top: 8px;
+  border-radius: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #F1F3F9;
+  background: var(--qm-accent, #3b82f6);
+  border: none;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  box-sizing: border-box;
+  letter-spacing: 0.08em;
+}
+.login-btn::after {
+  border: none;
+}
+
+.login-err {
+  font-size: 13px;
+  color: #F87171;
+  margin-bottom: 10px;
+  width: 100%;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.login-switch {
+  font-size: 14px;
+  color: #9499B0;
+  text-align: center;
+  margin-top: 16px;
+  font-weight: 500;
+  padding: 8px 0;
+}
+.login-switch-link {
+  color: var(--qm-accent-light, #60a5fa);
+  font-weight: 700;
+}
+
+.login-metrics {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  width: 100%;
+}
+.metric {
+  flex: 1;
+  background: var(--qm-bg);
+  border: 1px solid var(--qm-border);
+  border-radius: 12px;
+  padding: 12px 8px;
+  text-align: center;
+  box-sizing: border-box;
+}
+.metric-v {
+  display: block;
+  color: var(--qm-accent-light, #60a5fa);
+  font-size: 18px;
+  font-weight: 700;
+}
+.metric-k {
+  display: block;
+  color: #4A4D65;
+  font-size: 10px;
+  margin-top: 4px;
+  font-weight: 600;
+}

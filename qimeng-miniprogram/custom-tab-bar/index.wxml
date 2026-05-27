@@ -1,0 +1,15 @@
+<view class="tbar">
+  <view
+    class="tab {{selected === index ? 'on' : ''}}"
+    wx:for="{{tabs}}"
+    wx:key="url"
+    bindtap="switchTab"
+    data-index="{{index}}"
+  >
+    <view class="tab-icon">
+      <text class="sym-icon tab-sym {{selected === index ? 'on' : ''}}">{{item.sym}}</text>
+    </view>
+    <text class="tlb">{{item.label}}</text>
+    <view class="notif-dot" wx:if="{{hasPending && item.icon === 'contacts' && selected !== index}}"></view>
+  </view>
+</view>

@@ -1,0 +1,14 @@
+{
+  "miniprogramRoot": "qimeng-miniprogram/",
+  "compileType": "miniprogram",
+  "appid": "wx6e89b097c5895bba",
+  "projectname": "qimeng-platform",
+  "setting": {
+    "es6": true,
+    "postcss": true,
+    "minified": false,
+    "urlCheck": false,
+    "enhance": false,
+    "useApiHook": false
+  }
+}

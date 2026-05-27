@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="MBTI 十六型人格关系谱 — 交互式兼容图谱、优缺点、最佳伴侣与动漫风可视化" />
+  <title>MBTI 关系谱 · 十六型人格互动图鉴</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="sky" aria-hidden="true"></div>
+  <div class="stars" aria-hidden="true"></div>
+  <canvas id="sakura-canvas" aria-hidden="true"></canvas>
+
+  <div class="app">
+    <header class="hero">
+      <div class="hero-badge">✨ 动漫风 · 交互式 · 全 16 型深度档案</div>
+      <h1>MBTI 关系谱</h1>
+      <p>
+        探索十六种人格之间的缘分连线——优缺点、恋爱风格、最佳伴侣与磨合组合。
+        点击图谱中的节点，或使用下方人格卡片，开启你的性格冒险图鉴。
+      </p>
+      <div class="hero-actions">
+        <button type="button" class="btn btn-primary" data-view="spectrum">🗺️ 关系星图</button>
+        <button type="button" class="btn" data-view="cards">🎴 人格卡片</button>
+        <button type="button" class="btn" data-view="matrix">📊 兼容矩阵</button>
+        <button type="button" class="btn" id="btn-compare">💞 配对测算</button>
+      </div>
+    </header>
+
+    <!-- Spectrum view -->
+    <section id="view-spectrum" class="view-section active">
+      <div class="pairs-strip" id="pairs-strip"></div>
+
+      <div class="toolbar">
+        <div class="search-wrap">
+          <input type="search" id="search-input" placeholder="搜索类型，如 INTJ、建筑师…" autocomplete="off" />
+        </div>
+        <div class="filter-group">
+          <button type="button" class="filter-chip active" data-temp="all">全部</button>
+          <button type="button" class="filter-chip" data-temp="NT">🔬 分析师 NT</button>
+          <button type="button" class="filter-chip" data-temp="NF">🕊️ 外交官 NF</button>
+          <button type="button" class="filter-chip" data-temp="SJ">🛡️ 守护者 SJ</button>
+          <button type="button" class="filter-chip" data-temp="SP">🌍 探险家 SP</button>
+        </div>
+        <div class="edge-toggle">
+          <span>连线：</span>
+          <label><input type="checkbox" data-edge="best" checked /> 最佳</label>
+          <label><input type="checkbox" data-edge="good" checked /> 默契</label>
+          <label><input type="checkbox" data-edge="challenge" checked /> 磨合</label>
+        </div>
+      </div>
+
+      <div class="main-grid" id="spectrum">
+        <div class="graph-panel">
+          <div class="graph-header">
+            <h2>人格关系星图</h2>
+            <div class="graph-legend">
+              <span class="legend-item"><span class="legend-line best"></span> 最佳伴侣</span>
+              <span class="legend-item"><span class="legend-line good"></span> 默契拍档</span>
+              <span class="legend-item"><span class="legend-line challenge"></span> 需要磨合</span>
+            </div>
+          </div>
+          <div id="graph-container"></div>
+          <p class="graph-hint">拖拽节点 · 滚轮缩放 · 点击查看详情</p>
+        </div>
+
+        <aside class="detail-panel" id="detail-panel">
+          <div class="detail-empty">
+            <div class="mascot">🌸</div>
+            <p>点击星图中的任意人格节点<br />查看完整档案与伴侣匹配</p>
+          </div>
+          <div class="detail-content"></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Cards view -->
+    <section id="view-cards" class="view-section">
+      <h2 class="section-title">十六型人格卡片图鉴</h2>
+      <p style="text-align:center;color:var(--text-muted);margin:-12px 0 24px">点击卡片可跳转至星图并展开详情</p>
+      <div class="cards-grid" id="cards-grid"></div>
+    </section>
+
+    <!-- Matrix view -->
+    <section id="view-matrix" class="view-section">
+      <h2 class="section-title">兼容度矩阵</h2>
+      <p style="text-align:center;color:var(--text-muted);margin:-12px 0 16px">
+        ♥ 最佳 · ◆ 默契 · △ 磨合 · ★ 自身 · · 中性
+      </p>
+      <div class="matrix-wrap">
+        <table class="compat-matrix" id="compat-matrix"></table>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>MBTI 关系谱 · 仅供娱乐与自我探索，不能替代专业心理评估。</p>
+      <p style="margin-top:8px">真爱没有公式——理解与尊重，才是最好的兼容度。</p>
+    </footer>
+  </div>
+
+  <!-- Compare modal -->
+  <div class="modal-overlay" id="compare-modal" role="dialog" aria-labelledby="compare-title">
+    <div class="modal">
+      <button type="button" class="modal-close" id="modal-close" aria-label="关闭">×</button>
+      <h2 id="compare-title">💞 双人类型配对测算</h2>
+      <div class="compare-selects">
+        <select id="compare-a" aria-label="类型 A"></select>
+        <span style="font-size:1.5rem">♥</span>
+        <select id="compare-b" aria-label="类型 B"></select>
+      </div>
+      <div id="compare-result" class="compare-result"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/graph.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

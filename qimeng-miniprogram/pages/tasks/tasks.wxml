@@ -1,0 +1,452 @@
+<view class="page-wrap" style="padding-top:{{headerHeight}}px;padding-bottom:{{pageBottom}}px">
+  <!-- 导航栏 -->
+  <view class="nav">
+    <text class="nav-t">{{sub === 0 ? '任务广场' : '活动'}}</text>
+  </view>
+
+  <!-- 主标签：任务 / 活动 -->
+  <view class="seg">
+    <view class="sb2 {{sub === 0 ? 'on' : ''}}" bindtap="switchSub" data-n="0">任务</view>
+    <view class="sb2 {{sub === 1 ? 'on' : ''}}" bindtap="switchSub" data-n="1">活动</view>
+  </view>
+
+  <!-- ===== 任务 ===== -->
+  <block wx:if="{{sub === 0}}">
+  <!-- 任务子标签 -->
+  <view class="seg">
+    <view class="sb2 {{taskSub === 0 ? 'on' : ''}}" bindtap="switchTaskSub" data-n="0">广场</view>
+    <view class="sb2 {{taskSub === 1 ? 'on' : ''}}" bindtap="switchTaskSub" data-n="1">我承接</view>
+    <view class="sb2 {{taskSub === 2 ? 'on' : ''}}" bindtap="switchTaskSub" data-n="2">我发布</view>
+  </view>
+
+  <!-- 广场视图 -->
+  <block wx:if="{{taskSub === 0}}">
+    <view class="sw">
+      <view class="si-wrap">
+        <text class="sym-icon search-sym">🔍</text>
+        <input class="si" placeholder="搜索任务..." placeholder-class="si-ph" value="{{searchText}}" bindinput="onSearch" />
+      </view>
+      <view class="fbtn {{taskFilter !== '全部' ? 'act' : ''}}" style="flex:0 0 auto;padding:8px 12px"
+            bindtap="toggleFilter" data-key="taskcat">
+        {{taskFilter === '全部' ? '分类' : taskFilter}} ▾
+      </view>
+    </view>
+    <view class="fdrop" wx:if="{{openFilter === 'taskcat'}}">
+      <view class="ft {{taskFilter === item ? 'on' : ''}}" wx:for="{{cats}}" wx:key="*this"
+            bindtap="setCatFilter" data-value="{{item}}">{{item}}</view>
+    </view>
+    <block wx:if="{{loading}}">
+      <view class="skeleton-card" wx:for="{{[1,2]}}" wx:key="*this">
+        <view class="skeleton-card-inner">
+          <view class="skeleton-lines" style="flex:1">
+            <view class="skeleton-line skeleton-line-wide"></view>
+            <view class="skeleton-line skeleton-line-narrow"></view>
+            <view class="skeleton-line skeleton-line-narrow" style="width:40%"></view>
+          </view>
+        </view>
+      </view>
+    </block>
+    <block wx:else>
+    <view class="sec">共 {{displayTasks.length}} 个任务</view>
+    <view class="empty-state" wx:if="{{displayTasks.length === 0}}">
+      <view class="empty-icon"><text class="sym-icon">📋</text></view>
+      <view class="empty-text">还没有任务</view>
+      <view class="empty-sub">点击右下角发布第一个任务 ↘</view>
+    </view>
+    <view wx:for="{{displayTasks}}" wx:key="id">
+      <view class="tc {{item.status === 'completed' ? 'card-done' : ''}}" hover-class="tc-press" hover-stay-time="80">
+        <view class="done-badge status-completed" wx:if="{{item.status === 'completed'}}">已完成</view>
+        <view class="card-done-mask" wx:if="{{item.status === 'completed'}}"></view>
+        <view class="tc-head" bindtap="openTask" data-id="{{item.id}}">
+          <view class="tc-title">{{item.title}}</view>
+          <view class="tc-meta">
+            <text class="pl pp">{{item.cat}}</text>
+            <text class="pl {{item.statusCls}}">{{item.statusLabel}}</text>
+            <text style="font-size:10px;color:#3a5878;font-weight:600">截止 {{item.deadline}}</text>
+          </view>
+        </view>
+        <view class="tc-body">
+          <view class="tc-desc">{{item.desc}}</view>
+          <view class="tc-footer">
+            <view>
+              <view class="cv">{{item.creditsStr}} <text style="font-size:12px;color:#3a5878;font-weight:600">积分</text></view>
+              <view class="csub lv-threshold-row">
+                <text>门槛 {{item.minLv}} 级</text>
+                <text class="lv-help-icon" catchtap="showLvGuide">❓</text>
+                <text class="lv-threshold-meta"> · {{item.joined}}/{{item.quota}} 人</text>
+              </view>
+            </view>
+            <view style="display:flex;align-items:center;gap:5px">
+              <view class="av" style="background:{{item.posterBg}};color:{{item.posterC}};width:26px;height:26px;font-size:9px">
+                <text>{{item.posterAbbr}}</text>
+              </view>
+              <text style="font-size:10px;color:#7090b0;font-weight:600">{{item.posterName}}</text>
+            </view>
+          </view>
+          <view class="sf2">
+            <view class="btn bs" bindtap="openTask" data-id="{{item.id}}">查看任务</view>
+            <view class="btn bw" wx:if="{{!item.isMine && !item.isJoined && item.status === 'open'}}"
+                  bindtap="joinTask" data-id="{{item.id}}">接受任务</view>
+            <view class="btn bs" wx:elif="{{item.isMine}}" bindtap="openTask" data-id="{{item.id}}">我发布的</view>
+            <view class="btn bs" wx:elif="{{item.isJoined}}" bindtap="openTask" data-id="{{item.id}}">已申请</view>
+            <view class="btn bs" wx:else bindtap="openTask" data-id="{{item.id}}">已结束</view>
+          </view>
+          <view class="btn btn-complete" wx:if="{{item.showComplete}}" catchtap="confirmComplete" data-id="{{item.id}}">确认完成</view>
+        </view>
+      </view>
+    </view>
+    </block>
+  </block>
+
+  <!-- 我承接 -->
+  <block wx:elif="{{taskSub === 1}}">
+    <block wx:if="{{loading}}">
+      <view class="skeleton-card" wx:for="{{[1,2]}}" wx:key="*this">
+        <view class="skeleton-line skeleton-line-wide"></view>
+        <view class="skeleton-line skeleton-line-narrow"></view>
+      </view>
+    </block>
+    <block wx:else>
+    <view class="sec">我承接的 ({{myJoinedTasks.length}})</view>
+    <view class="empty-state" wx:if="{{myJoinedTasks.length === 0}}">
+      <view class="empty-icon"><text class="sym-icon">📋</text></view>
+      <view class="empty-text">暂无承接记录</view>
+    </view>
+    <view wx:for="{{myJoinedTasks}}" wx:key="id">
+      <view class="tc {{item.status === 'completed' ? 'card-done' : ''}}" bindtap="openTask" data-id="{{item.id}}">
+        <view class="done-badge status-completed" wx:if="{{item.status === 'completed'}}">已完成</view>
+        <view class="card-done-mask" wx:if="{{item.status === 'completed'}}"></view>
+        <view class="tc-head">
+          <view class="tc-title">{{item.title}}</view>
+          <view class="tc-meta">
+            <text class="pl pp">{{item.cat}}</text>
+            <text class="pl pf">我承接的</text>
+          </view>
+        </view>
+        <view class="tc-body">
+          <view class="tc-footer">
+            <view class="cv">{{item.creditsStr}} <text style="font-size:12px;color:#3a5878;font-weight:600">积分</text></view>
+            <text style="font-size:11px;color:#3a5878;font-weight:600">截止 {{item.deadline}}</text>
+          </view>
+          <view class="btn btn-delivery-submit"
+                wx:if="{{item.isJoined && item.status === 'in_progress'}}"
+                catchtap="submitDelivery" data-id="{{item.id}}">提交成果</view>
+        </view>
+      </view>
+    </view>
+    </block>
+  </block>
+
+  <!-- 我发布 -->
+  <block wx:else>
+    <block wx:if="{{loading}}">
+      <view class="skeleton-card" wx:for="{{[1,2]}}" wx:key="*this">
+        <view class="skeleton-line skeleton-line-wide"></view>
+        <view class="skeleton-line skeleton-line-narrow"></view>
+      </view>
+    </block>
+    <block wx:else>
+    <view class="sec">我发布的 ({{myPostedTasks.length}})</view>
+    <view class="empty-state" wx:if="{{myPostedTasks.length === 0}}">
+      <view class="empty-icon"><text class="sym-icon">📝</text></view>
+      <view class="empty-text">暂无发布记录</view>
+    </view>
+    <view wx:for="{{myPostedTasks}}" wx:key="id">
+      <view class="tc {{item.status === 'completed' ? 'card-done' : ''}}">
+        <view class="done-badge status-completed" wx:if="{{item.status === 'completed'}}">已完成</view>
+        <view class="card-done-mask" wx:if="{{item.status === 'completed'}}"></view>
+        <view class="tc-head" bindtap="openTask" data-id="{{item.id}}">
+          <view class="tc-title">{{item.title}}</view>
+          <view class="tc-meta">
+            <text class="pl pp">{{item.cat}}</text>
+            <text class="pl {{item.statusCls}}">{{item.statusLabel}}</text>
+          </view>
+        </view>
+        <view class="tc-body">
+          <view class="tc-footer">
+            <view class="cv">{{item.creditsStr}} <text style="font-size:12px;color:#3a5878;font-weight:600">积分</text></view>
+            <text style="font-size:11px;color:#3a5878;font-weight:600">截止 {{item.deadline}}</text>
+          </view>
+          <view class="btn btn-complete" wx:if="{{item.showComplete}}" catchtap="confirmComplete" data-id="{{item.id}}">确认完成</view>
+          <view class="btn btn-delivery-view"
+                wx:if="{{item.isPosted && item.status === 'in_progress'}}"
+                catchtap="showDeliveries" data-id="{{item.id}}">查看交付</view>
+        </view>
+      </view>
+    </view>
+    </block>
+  </block>
+  </block>
+
+  <!-- ===== 活动 ===== -->
+  <block wx:else>
+    <view class="seg">
+      <view class="sb2 {{actSub === 0 ? 'on' : ''}}" bindtap="switchActSub" data-n="0">全部</view>
+      <view class="sb2 {{actSub === 1 ? 'on' : ''}}" bindtap="switchActSub" data-n="1">即将开始</view>
+      <view class="sb2 {{actSub === 2 ? 'on' : ''}}" bindtap="switchActSub" data-n="2">进行中</view>
+      <view class="sb2 {{actSub === 3 ? 'on' : ''}}" bindtap="switchActSub" data-n="3">已结束</view>
+    </view>
+
+    <block wx:if="{{loading}}">
+      <view class="skeleton-card" wx:for="{{[1,2]}}" wx:key="*this">
+        <view class="skeleton-line skeleton-line-wide"></view>
+        <view class="skeleton-line skeleton-line-narrow"></view>
+      </view>
+    </block>
+    <block wx:else>
+    <view class="sec">{{subLabel}} ({{displayActivities.length}})</view>
+    <view class="empty-state" wx:if="{{displayActivities.length === 0}}">
+      <view class="empty-icon"><text class="sym-icon">📅</text></view>
+      <view class="empty-text">该分类下暂无活动</view>
+      <view class="empty-sub">可切换上方标签查看</view>
+    </view>
+
+    <view wx:for="{{displayActivities}}" wx:key="id">
+      <view class="ac" hover-class="tc-press" hover-stay-time="80">
+        <view class="ah">
+          <view class="ad">
+            {{item.date}}　<text class="pl {{item.typeClass}}">{{item.type}}</text>
+            <text wx:if="{{item.isJoined}}" class="pl pf" style="margin-left:4px">已报名</text>
+          </view>
+          <view class="at">{{item.title}}</view>
+        </view>
+        <view class="ab">
+          <view class="am">
+            <view>地点：<text style="color:#a8c8e8;font-weight:700">{{item.space}}</text></view>
+            <view>名额：<text style="color:#a8c8e8;font-weight:700">{{item.signups}}/{{item.seats}} 人</text></view>
+            <view style="color:#8aa8c8;margin-top:2px;font-weight:500">{{item.desc}}</view>
+          </view>
+          <view class="sf2">
+            <view class="btn bs" bindtap="openActDetail" data-id="{{item.id}}">查看</view>
+            <view class="btn bp" wx:if="{{item.status === 'upcoming' && !item.isJoined}}"
+                  bindtap="openActSignup" data-id="{{item.id}}">报名</view>
+            <view class="btn bs" wx:elif="{{item.status === 'upcoming' && item.isJoined}}">已报名</view>
+            <view class="btn bp"
+                  wx:elif="{{item.status === 'ongoing' && item.isJoined && !item.isCheckedIn}}"
+                  catchtap="selfCheckin" data-id="{{item.id}}">我要签到</view>
+            <view class="btn bs"
+                  wx:elif="{{item.status === 'ongoing' && item.isJoined && item.isCheckedIn}}">已签到 ✓</view>
+            <view class="btn bs"
+                  wx:elif="{{item.status === 'ongoing' && !item.isJoined}}">进行中</view>
+            <view class="btn bs" wx:elif="{{item.status === 'ended'}}">已结束</view>
+            <view class="btn bp share-wx-btn" open-type="share" bindtap="prepareShareActivity" data-id="{{item.id}}">分享</view>
+          </view>
+          <view class="btn btn-attendee-manage"
+                wx:if="{{item.isHost}}"
+                catchtap="showAttendees"
+                data-id="{{item.id}}">管理报名</view>
+        </view>
+      </view>
+    </view>
+    </block>
+  </block>
+
+  <!-- 发布 FAB -->
+  <view class="task-fab" wx:if="{{sub === 0}}" bindtap="showPostModal" hover-class="task-fab-press">+</view>
+  <view class="task-fab" wx:if="{{sub === 1}}" bindtap="showPostActivity" hover-class="task-fab-press">+</view>
+</view>
+
+<!-- ======= 弹窗 ======= -->
+
+<!-- 靠谱度等级说明 -->
+<view class="ov" wx:if="{{modal === 'lvGuide'}}" bindtap="closeModal">
+  <view class="mb lv-guide-modal" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">靠谱度等级说明</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <scroll-view class="mbody lv-guide-body" scroll-y>
+      <view class="lv-guide-item" wx:for="{{lvGuideLevels}}" wx:key="level">
+        <view class="lv-guide-level">{{item.level}}</view>
+        <view class="lv-guide-desc">{{item.desc}}</view>
+      </view>
+      <view class="lv-guide-foot">
+        靠谱度根据你完成任务的质量、参与活动次数、社群贡献自动累积提升
+      </view>
+    </scroll-view>
+    <view class="lv-guide-actions">
+      <view class="btn bp" bindtap="closeModal">我知道了</view>
+    </view>
+  </view>
+</view>
+
+<!-- 任务详情 -->
+<view class="ov" wx:if="{{modal === 'td' && selectedTask}}" bindtap="closeModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">任务详情</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <view class="mbody">
+      <view class="hb">
+        <view style="font-size:14px;font-weight:800;color:#e0eefc;margin-bottom:7px">{{selectedTask.title}}</view>
+        <view style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px">
+          <text class="pl pp">{{selectedTask.cat}}</text>
+          <text class="pl {{selectedTask.statusCls}}">{{selectedTask.statusLabel}}</text>
+        </view>
+        <view style="font-size:11px;color:#7090b0;line-height:2.1;font-weight:500">
+          <view>截止：<text style="color:#a8c8e8;font-weight:700">{{selectedTask.deadline}}</text></view>
+          <view>名额：<text style="color:#a8c8e8;font-weight:700">{{selectedTask.joined}}/{{selectedTask.quota}} 人</text></view>
+          <view>靠谱度门槛：<text style="color:#a8c8e8;font-weight:700">{{selectedTask.minLv}} 级</text></view>
+        </view>
+      </view>
+      <view style="font-size:11px;color:#3a5878;font-weight:800;margin-bottom:6px">任务描述</view>
+      <view style="font-size:12px;color:#8aa8c8;line-height:1.85;margin-bottom:13px;font-weight:500">{{selectedTask.desc}}</view>
+      <view style="font-size:11px;color:#3a5878;font-weight:800;margin-bottom:6px">积分结算</view>
+      <view style="background:#070d1a;border:1.5px solid #1c2840;border-radius:11px;padding:12px;margin-bottom:13px">
+        <view style="font-size:22px;font-weight:900;color:#5cb8ff;margin-bottom:7px">{{selectedTask.creditsStr}} <text style="font-size:12px;color:#3a5878;font-weight:600">积分</text></view>
+        <view style="font-size:11px;color:#7090b0;line-height:2;font-weight:500">
+          <view>满意度90+→<text style="color:#28e880;font-weight:800">120%</text></view>
+          <view>满意度80-89→<text style="color:#a8c8e8;font-weight:800">100%</text></view>
+          <view>满意度60-79→<text style="color:#d8a030;font-weight:800">70-90%</text></view>
+          <view>满意度&lt;60→<text style="color:#ff8848;font-weight:800">0-50%</text></view>
+          <view style="margin-top:4px;color:#2a4060;font-weight:600">手续费：{{myCreditFee}}（{{myCreditLv}}级）</view>
+        </view>
+      </view>
+      <!-- 发布方 -->
+      <view style="display:flex;align-items:center;gap:9px;padding:11px;background:#070d1a;border:1.5px solid #1c2e48;border-radius:11px;margin-bottom:13px">
+        <view class="av" style="background:{{selectedTask.posterBg}};color:{{selectedTask.posterC}};width:34px;height:34px;font-size:12px">
+          <text>{{selectedTask.posterAbbr}}</text>
+        </view>
+        <view style="flex:1">
+          <view style="font-size:13px;color:#e0eefc;font-weight:700">{{selectedTask.posterName}}</view>
+          <view style="font-size:10px;color:#7090b0;margin-top:2px;font-weight:600">发布方 · {{selectedTask.posterJob}} · <text class="pl {{selectedTask.posterCreditLvCls}}">{{selectedTask.posterCreditLv}}</text></view>
+        </view>
+        <text style="color:#3a5878;font-size:16px">›</text>
+      </view>
+      <view style="display:flex;gap:6px">
+        <view class="btn bs" wx:if="{{selectedTask.isMine}}">我发布的任务</view>
+        <view class="btn bs" wx:elif="{{selectedTask.isJoined}}">已申请承接</view>
+        <view class="btn bw" wx:elif="{{selectedTask.status === 'open'}}" bindtap="joinTask" data-id="{{selectedTask.id}}">申请承接</view>
+        <view class="btn bs" wx:else>任务已结束</view>
+        <view class="btn bp share-wx-btn" style="flex:0 0 auto;padding:9px 16px" open-type="share" bindtap="prepareShareTask">转发</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 活动报名 -->
+<view class="ov" wx:if="{{modal === 'signup' && selectedActivity}}" bindtap="closeModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">活动报名</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <view class="mbody">
+      <view class="hb">
+        <view style="font-size:10px;color:#5cb8ff;font-weight:800">{{selectedActivity.date}}</view>
+        <view style="font-size:14px;font-weight:800;color:#e0eefc;margin-top:3px">{{selectedActivity.title}}</view>
+        <view style="font-size:11px;color:#7090b0;margin-top:3px;font-weight:500">{{selectedActivity.space}}</view>
+      </view>
+      <view class="fg">
+        <text class="fl">备注需求</text>
+        <textarea class="fta" placeholder="如：需要投影、白板..."></textarea>
+      </view>
+      <view class="fg">
+        <text class="fl">同行者</text>
+        <input class="fi" placeholder="姓名，逗号分隔（选填）" />
+      </view>
+      <view class="btn bp" bindtap="confirmActSignup" data-id="{{selectedActivity.id}}">确认报名</view>
+    </view>
+  </view>
+</view>
+
+<!-- 报名管理 -->
+<view class="ov" wx:if="{{modal === 'attendees'}}" bindtap="closeModal">
+  <view class="mb attendee-modal" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">报名名单</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <scroll-view class="mbody attendee-scroll" scroll-y>
+      <view class="attendee-empty" wx:if="{{attendeeList.length === 0}}">
+        <text>暂无报名记录</text>
+      </view>
+      <view class="attendee-card" wx:for="{{attendeeList}}" wx:key="user_id">
+        <view class="attendee-card-head">
+          <view class="attendee-name-wrap">
+            <text class="attendee-name">{{item.name}}</text>
+            <text class="attendee-lv pl pb2">{{item.reputation_level}}</text>
+          </view>
+          <text class="attendee-status {{item.signed_in ? 'attendee-signed' : 'attendee-unsigned'}}">{{item.statusLabel}}</text>
+        </view>
+        <view class="attendee-phone" wx:if="{{item.phone}}">{{item.phone}}</view>
+        <view class="attendee-signin-btn"
+              wx:if="{{item.showSignin}}"
+              catchtap="confirmAttendeeSignin"
+              data-user-id="{{item.user_id}}">确认签到</view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+
+<!-- 交付记录 -->
+<view class="ov" wx:if="{{modal === 'deliveries'}}" bindtap="closeModal">
+  <view class="mb delivery-modal" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">交付记录</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <scroll-view class="mbody delivery-scroll" scroll-y>
+      <view class="delivery-empty" wx:if="{{deliveryList.length === 0}}">
+        <text>暂无交付记录</text>
+      </view>
+      <view class="delivery-card" wx:for="{{deliveryList}}" wx:key="id">
+        <view class="delivery-card-head">
+          <text class="delivery-executor" wx:if="{{item.executor_name}}">{{item.executor_name}}</text>
+          <text class="delivery-status {{item.statusCls}}">{{item.statusLabel}}</text>
+        </view>
+        <view class="delivery-content">{{item.content}}</view>
+        <view class="delivery-reject" wx:if="{{item.reject_reason}}">
+          驳回原因：{{item.reject_reason}}
+        </view>
+        <view class="delivery-time" wx:if="{{item.created_at}}">提交于 {{item.created_at}}</view>
+        <view class="delivery-actions" wx:if="{{item.showReview}}">
+          <view class="btn delivery-btn-approve"
+                catchtap="reviewDelivery"
+                data-delivery-id="{{item.id}}"
+                data-action="approve">通过</view>
+          <view class="btn delivery-btn-reject"
+                catchtap="reviewDelivery"
+                data-delivery-id="{{item.id}}"
+                data-action="reject">驳回</view>
+        </view>
+        <view class="btn br delivery-btn-appeal"
+              wx:if="{{item.status === 'rejected' && !deliveryIsHost}}"
+              catchtap="submitAppeal"
+              data-task-id="{{deliveryTaskId}}">对结果有异议？申诉</view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+
+<!-- 活动详情 -->
+<view class="ov" wx:if="{{modal === 'detail' && selectedActivity}}" bindtap="closeModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">活动详情</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <view class="mbody">
+      <view class="hb">
+        <view style="font-size:14px;font-weight:800;color:#e0eefc;margin-bottom:6px">{{selectedActivity.title}}</view>
+        <view style="display:flex;gap:5px;margin-bottom:8px">
+          <text class="pl {{selectedActivity.typeClass}}">{{selectedActivity.type}}</text>
+          <text class="pl {{selectedActivity.statusCls}}">{{selectedActivity.statusLabel}}</text>
+        </view>
+        <view style="font-size:11px;color:#7090b0;line-height:2;font-weight:500">
+          <view>时间：<text style="color:#a8c8e8;font-weight:700">{{selectedActivity.date}}</text></view>
+          <view>地点：<text style="color:#a8c8e8;font-weight:700">{{selectedActivity.space}}</text></view>
+          <view>报名：<text style="color:#a8c8e8;font-weight:700">{{selectedActivity.signups}}/{{selectedActivity.seats}} 人</text></view>
+        </view>
+      </view>
+      <view style="font-size:11px;color:#3a5878;font-weight:800;margin-bottom:6px">活动简介</view>
+      <view style="font-size:12px;color:#8aa8c8;line-height:1.85;margin-bottom:13px;font-weight:500">{{selectedActivity.desc}}</view>
+      <view style="display:flex;gap:8px;margin-top:4px">
+        <view class="btn bp share-wx-btn" style="flex:1" open-type="share" bindtap="prepareShareActivity" data-id="{{selectedActivity.id}}">转发到微信</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<custom-tab-bar />

@@ -1,0 +1,6 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarTitleText": "消息",
+  "enablePullDownRefresh": true,
+  "backgroundTextStyle": "dark"
+}

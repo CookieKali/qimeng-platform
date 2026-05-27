@@ -1,0 +1,215 @@
+<view class="ep-page" style="padding-top:{{headerHeight}}px">
+  <view class="ep-nav" style="padding-top:{{statusBarHeight}}px">
+    <view class="ep-nav-btn ep-nav-muted" bindtap="onCancel">取消</view>
+    <text class="ep-nav-title">编辑资料</text>
+    <view class="ep-nav-btn ep-nav-primary {{saving ? 'ep-nav-disabled' : ''}}" bindtap="saveEdit">{{saving ? '保存中' : '保存'}}</view>
+  </view>
+
+  <scroll-view class="ep-scroll" scroll-y enhanced show-scrollbar="{{false}}">
+    <view class="ep-hint">完善资料后，通讯录中的数字名片会更完整</view>
+
+    <!-- 基本信息 -->
+    <view class="ep-section">
+      <view class="ep-section-title">基本信息</view>
+      <view class="ep-group">
+        <view class="ep-cell">
+          <text class="ep-label">姓名</text>
+          <input class="ep-input" value="{{form.name}}" bindinput="onField" data-key="name" placeholder="真实姓名或常用名" placeholder-class="ep-ph" />
+        </view>
+        <view class="ep-cell ep-cell-readonly">
+          <text class="ep-label">手机号</text>
+          <text class="ep-value-muted">{{form.phone || '—'}}</text>
+        </view>
+        <view class="ep-cell ep-cell-last">
+          <text class="ep-label">邮箱</text>
+          <input class="ep-input" value="{{form.email}}" bindinput="onField" data-key="email" placeholder="选填" placeholder-class="ep-ph" />
+        </view>
+      </view>
+    </view>
+
+    <!-- 职业 -->
+    <view class="ep-section">
+      <view class="ep-section-title">职业信息</view>
+      <view class="ep-group">
+        <view class="ep-cell">
+          <text class="ep-label">职务</text>
+          <input class="ep-input" value="{{form.job}}" bindinput="onField" data-key="job" placeholder="如：产品总监" placeholder-class="ep-ph" />
+        </view>
+        <view class="ep-cell">
+          <text class="ep-label">公司</text>
+          <input class="ep-input" value="{{form.co}}" bindinput="onField" data-key="co" placeholder="所在公司 / 机构" placeholder-class="ep-ph" />
+        </view>
+        <view class="ep-cell">
+          <text class="ep-label">城市</text>
+          <picker mode="selector" range="{{regions}}" value="{{regionIndex}}" bindchange="onRegionChange">
+            <view class="ep-picker {{form.city ? '' : 'ep-ph'}}">{{form.city || '请选择'}}</view>
+          </picker>
+          <text class="ep-chevron">›</text>
+        </view>
+        <view class="ep-cell ep-cell-last">
+          <text class="ep-label">行业</text>
+          <picker mode="selector" range="{{industryOptions}}" value="{{industryIndex}}" bindchange="onIndustryChange">
+            <view class="ep-picker {{form.industry ? '' : 'ep-ph'}}">{{form.industry || '请选择'}}</view>
+          </picker>
+          <text class="ep-chevron">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 名片展示 -->
+    <view class="ep-section">
+      <view class="ep-section-title">名片展示</view>
+      <view class="ep-group ep-group-stack">
+        <view class="ep-stack-cell">
+          <text class="ep-stack-label">个人价值</text>
+          <textarea
+            class="ep-textarea"
+            value="{{form.personalValue}}"
+            bindinput="onField"
+            data-key="personalValue"
+            placeholder="用一两句话说明你能为他人创造什么价值"
+            placeholder-class="ep-ph"
+            maxlength="500"
+            auto-height
+          />
+        </view>
+        <view class="ep-stack-cell">
+          <text class="ep-stack-label">核心能力</text>
+          <textarea
+            class="ep-textarea"
+            value="{{form.talentsText}}"
+            bindinput="onField"
+            data-key="talentsText"
+            placeholder="例：战略规划、资源整合、商务谈判"
+            placeholder-class="ep-ph"
+            maxlength="500"
+            auto-height
+          />
+        </view>
+        <view class="ep-stack-cell">
+          <text class="ep-stack-label">可提供资源</text>
+          <textarea
+            class="ep-textarea"
+            value="{{form.resourcesText}}"
+            bindinput="onField"
+            data-key="resourcesText"
+            placeholder="你能对接或提供的资源"
+            placeholder-class="ep-ph"
+            maxlength="500"
+            auto-height
+          />
+        </view>
+        <view class="ep-stack-cell ep-stack-cell-last">
+          <text class="ep-stack-label">当前需求</text>
+          <textarea
+            class="ep-textarea"
+            value="{{form.needsText}}"
+            bindinput="onField"
+            data-key="needsText"
+            placeholder="你正在寻找的合作或资源"
+            placeholder-class="ep-ph"
+            maxlength="500"
+            auto-height
+          />
+        </view>
+      </view>
+    </view>
+
+    <!-- 扩展信息 -->
+    <view class="ep-section">
+      <view class="ep-section-title">扩展信息</view>
+
+      <view class="ep-group ep-group-stack ep-sub-block">
+        <view class="ep-stack-cell">
+          <text class="ep-stack-label">角色标签</text>
+          <checkbox-group class="ep-role-group" bindchange="onRolesChange">
+            <label
+              class="ep-role-chip {{form.roles.indexOf(item) > -1 ? 'ep-role-chip-on' : ''}}"
+              wx:for="{{roleOptions}}"
+              wx:key="*this"
+            >
+              <checkbox class="ep-role-checkbox" value="{{item}}" checked="{{form.roles.indexOf(item) > -1}}" color="#3b82f6" />
+              <text class="ep-role-text">{{item}}</text>
+            </label>
+          </checkbox-group>
+        </view>
+      </view>
+
+      <view class="ep-group ep-group-stack ep-sub-block">
+        <view class="ep-stack-cell ep-stack-cell-last">
+          <text class="ep-stack-label">荣誉认证</text>
+          <textarea
+            class="ep-textarea"
+            value="{{form.honorsText}}"
+            bindinput="onField"
+            data-key="honorsText"
+            placeholder="每行填写一条，如：2023年度优秀合伙人"
+            placeholder-class="ep-ph"
+            maxlength="1000"
+            auto-height
+          />
+        </view>
+      </view>
+
+      <view class="ep-group ep-group-stack">
+        <view class="ep-stack-cell ep-bizmap-hd">
+          <text class="ep-stack-label">业务版图</text>
+          <text class="ep-field-hint ep-bizmap-count">最多 3 条</text>
+        </view>
+        <block wx:for="{{form.bizmap}}" wx:key="index" wx:for-index="idx">
+          <view class="ep-bizmap-item">
+            <view class="ep-bizmap-item-hd">
+              <text class="ep-bizmap-item-title">第 {{idx + 1}} 条</text>
+              <view class="ep-bizmap-remove" catchtap="removeBizmapRow" data-index="{{idx}}">删除</view>
+            </view>
+            <view class="ep-bizmap-field">
+              <text class="ep-bizmap-label">行业领域</text>
+              <input
+                class="ep-bizmap-input"
+                value="{{item.industry}}"
+                bindinput="onBizmapField"
+                data-index="{{idx}}"
+                data-key="industry"
+                placeholder="如：企业服务"
+                placeholder-class="ep-ph"
+              />
+            </view>
+            <view class="ep-bizmap-field">
+              <text class="ep-bizmap-label">职位角色</text>
+              <input
+                class="ep-bizmap-input"
+                value="{{item.role}}"
+                bindinput="onBizmapField"
+                data-index="{{idx}}"
+                data-key="role"
+                placeholder="如：合伙人"
+                placeholder-class="ep-ph"
+              />
+            </view>
+            <view class="ep-bizmap-field ep-bizmap-field-last">
+              <text class="ep-bizmap-label">主营业务</text>
+              <input
+                class="ep-bizmap-input"
+                value="{{item.biz}}"
+                bindinput="onBizmapField"
+                data-index="{{idx}}"
+                data-key="biz"
+                placeholder="简要描述主营业务"
+                placeholder-class="ep-ph"
+              />
+            </view>
+          </view>
+        </block>
+        <view class="ep-bizmap-add-wrap" wx:if="{{canAddBizmap}}">
+          <view class="ep-bizmap-add" bindtap="addBizmapRow">+ 添加一条</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="ep-scroll-bottom"></view>
+  </scroll-view>
+
+  <view class="ep-footer" style="padding-bottom:{{safeBottom}}px">
+    <view class="btn bp ep-save-btn {{saving ? 'ep-save-disabled' : ''}}" bindtap="saveEdit">保存资料</view>
+  </view>
+</view>

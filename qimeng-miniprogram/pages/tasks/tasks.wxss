@@ -1,0 +1,458 @@
+.page-wrap {
+  background: transparent;
+}
+
+.page-wrap .seg {
+  margin: 10px 16px 0;
+}
+
+/* Publish FAB */
+.task-fab {
+  position: fixed;
+  right: 20px;
+  bottom: calc(68px + env(safe-area-inset-bottom));
+  z-index: 50;
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: var(--qm-accent, #3b82f6);
+  color: #fff;
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 48px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+}
+
+.task-fab-press {
+  opacity: 0.88;
+  transform: scale(0.96);
+}
+
+/* Task cards — layout only; surfaces from app.wxss */
+.page-wrap .tc {
+  position: relative;
+  overflow: hidden;
+}
+
+.page-wrap .pl.pa {
+  background: var(--qm-accent-soft);
+  color: var(--qm-accent-light);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.lv-threshold-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.lv-help-icon {
+  margin-left: 4px;
+  font-size: 12px;
+  line-height: 1;
+  color: #5B8DEF;
+  padding: 0 2px;
+}
+
+.lv-threshold-meta {
+  color: inherit;
+}
+
+.lv-guide-modal {
+  max-height: 78vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.lv-guide-body {
+  flex: 1;
+  max-height: 52vh;
+  padding: 12px 16px 8px;
+  box-sizing: border-box;
+}
+
+.lv-guide-item {
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.lv-guide-item:last-of-type {
+  border-bottom: none;
+}
+
+.lv-guide-level {
+  font-size: 14px;
+  font-weight: 700;
+  color: #5B8DEF;
+  margin-bottom: 4px;
+}
+
+.lv-guide-desc {
+  font-size: 13px;
+  color: #a1a1aa;
+  line-height: 1.55;
+}
+
+.lv-guide-foot {
+  margin-top: 12px;
+  padding: 12px;
+  font-size: 12px;
+  color: #8aa8c8;
+  line-height: 1.65;
+  background: rgba(91, 141, 239, 0.08);
+  border: 1px solid rgba(91, 141, 239, 0.18);
+  border-radius: 10px;
+}
+
+.lv-guide-actions {
+  padding: 12px 16px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.lv-guide-actions .btn {
+  width: 100%;
+}
+
+.page-wrap .pl.completed,
+.pl.completed {
+  background: rgba(52, 211, 153, 0.12);
+  color: #34D399;
+  border: 1px solid rgba(52, 211, 153, 0.25);
+}
+
+.page-wrap .pl.pgr,
+.page-wrap .pl.pc {
+  background: rgba(239, 68, 68, 0.12);
+  color: #F87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.status-completed,
+.done-badge.status-completed {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 3;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #34D399;
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  box-shadow: none;
+}
+
+.card-done {
+  opacity: 0.92;
+}
+
+.card-done-mask {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 2;
+  background: rgba(10, 11, 15, 0.45);
+  pointer-events: none;
+}
+
+.btn-complete {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: #34D399;
+  border-radius: 12px;
+  border: none;
+  box-sizing: border-box;
+}
+
+.pl.completed {
+  color: #34D399;
+  border-color: rgba(52, 211, 153, 0.35);
+  background: rgba(52, 211, 153, 0.12);
+}
+
+/* Activity cards on tasks page — use global .ac */
+.btn-delivery-submit,
+.btn-delivery-view {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+.btn-delivery-submit {
+  color: #fff;
+  background: var(--qm-accent, #3b82f6);
+}
+
+.btn-delivery-view {
+  color: #F1F3F9;
+  background: #2a3048;
+  border: 1px solid #3d4668;
+}
+
+/* Deliveries modal */
+.delivery-modal {
+  max-height: 78vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.delivery-scroll {
+  flex: 1;
+  max-height: 60vh;
+}
+
+.delivery-empty {
+  padding: 28px 16px;
+  text-align: center;
+  font-size: 13px;
+  color: #9499B0;
+}
+
+.delivery-card {
+  background: var(--qm-surface-2, #22232b);
+  border: 1px solid var(--qm-border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.delivery-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.delivery-executor {
+  font-size: 12px;
+  color: #9499B0;
+  font-weight: 600;
+}
+
+.delivery-status {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.delivery-status.delivery-pending {
+  color: var(--qm-accent-light);
+  background: var(--qm-accent-soft);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+}
+
+.delivery-status.delivery-approved {
+  color: #34D399;
+  background: rgba(52, 211, 153, 0.14);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+}
+
+.delivery-status.delivery-rejected {
+  color: #F87171;
+  background: rgba(248, 113, 113, 0.14);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+}
+
+.delivery-content {
+  font-size: 13px;
+  color: #e8ecf4;
+  line-height: 1.65;
+  font-weight: 500;
+  word-break: break-all;
+}
+
+.delivery-reject {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: #F87171;
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid rgba(248, 113, 113, 0.22);
+}
+
+.delivery-time {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.delivery-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.delivery-btn-approve {
+  flex: 1;
+  text-align: center;
+  padding: 9px 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: #34D399;
+  border-radius: 10px;
+}
+
+.delivery-btn-reject {
+  flex: 1;
+  text-align: center;
+  padding: 9px 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #F87171;
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: 10px;
+}
+
+.delivery-btn-appeal {
+  width: 100%;
+  margin-top: 10px;
+  text-align: center;
+  padding: 9px 0;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+/* Activity host: manage signups */
+.btn-attendee-manage {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #F1F3F9;
+  background: #2a3048;
+  border: 1px solid #3d4668;
+  border-radius: 12px;
+  box-sizing: border-box;
+}
+
+.attendee-modal {
+  max-height: 78vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.attendee-scroll {
+  flex: 1;
+  max-height: 60vh;
+}
+
+.attendee-empty {
+  padding: 28px 16px;
+  text-align: center;
+  font-size: 13px;
+  color: #9499B0;
+}
+
+.attendee-card {
+  background: var(--qm-surface-2, #22232b);
+  border: 1px solid var(--qm-border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+
+.attendee-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.attendee-name-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.attendee-name {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: #e8ecf4;
+}
+
+.attendee-lv {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.attendee-status {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.attendee-status.attendee-signed {
+  color: #34D399;
+  background: rgba(52, 211, 153, 0.14);
+  border: 1px solid rgba(52, 211, 153, 0.35);
+}
+
+.attendee-status.attendee-unsigned {
+  color: var(--qm-accent-light);
+  background: var(--qm-accent-soft);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+}
+
+.attendee-phone {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #9499B0;
+}
+
+.attendee-signin-btn {
+  margin-top: 12px;
+  padding: 9px 0;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: #34D399;
+  border-radius: 10px;
+}
+
+.share-wx-btn {
+  margin: 0;
+  line-height: 1.4;
+  font-size: inherit;
+  font-weight: inherit;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-wx-btn::after {
+  border: none;
+}

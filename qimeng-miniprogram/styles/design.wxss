@@ -1,0 +1,29 @@
+/**
+ * Qimeng design tokens — dark + blue accent
+ */
+page {
+  --qm-bg: #0a0b0f;
+  --qm-bg-soft: #0e1016;
+  --qm-surface: #18191f;
+  --qm-surface-2: #22232b;
+  --qm-surface-3: #2a2b34;
+  --qm-border: rgba(255, 255, 255, 0.07);
+  --qm-border-strong: rgba(255, 255, 255, 0.11);
+  --qm-text: #f4f4f5;
+  --qm-text-secondary: #a1a1aa;
+  --qm-text-tertiary: #71717a;
+  --qm-accent: #3b82f6;
+  --qm-accent-light: #60a5fa;
+  --qm-accent-soft: rgba(59, 130, 246, 0.14);
+  --qm-success: #34d399;
+  --qm-warning: #fbbf24;
+  --qm-danger: #f87171;
+  --qm-radius-sm: 10px;
+  --qm-radius-md: 14px;
+  --qm-radius-lg: 18px;
+  --qm-radius-xl: 22px;
+  --qm-radius-pill: 999px;
+  --qm-shadow-card: 0 4px 24px rgba(0, 0, 0, 0.22);
+  --qm-shadow-float: 0 12px 40px rgba(0, 0, 0, 0.35);
+  --qm-page-x: 16px;
+}

@@ -1,0 +1,148 @@
+.page-wrap {
+  background: transparent;
+}
+
+.page-wrap .seg {
+  margin: 10px 16px 0;
+}
+
+.page-wrap .at {
+  font-size: 15px;
+  color: #F1F3F9;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.page-wrap .ad {
+  font-size: 12px;
+  color: #9499B0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.page-wrap .am {
+  font-size: 12px;
+  color: #9499B0;
+  line-height: 1.9;
+}
+
+/* Activity type tags */
+.page-wrap .pl.pg,
+.page-wrap .pl.pf {
+  background: rgba(52, 211, 153, 0.1);
+  color: #34D399;
+  border: 1px solid rgba(52, 211, 153, 0.25);
+}
+
+.page-wrap .pl.pb,
+.page-wrap .pl.pb2 {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--qm-accent-light);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.page-wrap .signup-prog {
+  margin-top: 10px;
+}
+
+.page-wrap .signup-prog-track {
+  background: var(--qm-border);
+  border-radius: 4px;
+  height: 4px;
+  overflow: hidden;
+}
+
+.page-wrap .signup-prog-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--qm-accent-light), #34D399);
+  border-radius: 4px;
+}
+
+.btn-checkin {
+  display: block;
+  width: 100%;
+  margin-bottom: 14px;
+  padding: 11px 0;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--qm-bg);
+  background: #34D399;
+  border-radius: 12px;
+  border: none;
+  box-sizing: border-box;
+}
+
+.attendees-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.attendees-title {
+  font-size: 11px;
+  color: #4A4D65;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.attendees-protected {
+  font-size: 10px;
+  color: #9499B0;
+  font-weight: 500;
+}
+
+.attendees-list {
+  margin: 0;
+}
+
+.attendee-row {
+  align-items: center;
+}
+
+.attendee-row {
+  align-items: center;
+}
+
+.attendee-av {
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.attendee-av-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.attendee-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.attendee-me {
+  font-size: 10px;
+  color: var(--qm-accent-light);
+  font-weight: 600;
+  margin-left: 4px;
+}
+
+.attendee-action .btn-sm {
+  padding: 5px 10px;
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.attendees-empty {
+  font-size: 12px;
+  color: #4A4D65;
+  text-align: center;
+  padding: 16px;
+  font-weight: 500;
+}

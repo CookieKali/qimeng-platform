@@ -1,0 +1,14 @@
+{
+  "libVersion": "3.4.10",
+  "projectname": "qimeng-miniprogram",
+  "condition": {},
+  "setting": {
+    "urlCheck": false,
+    "coverView": true,
+    "skylineRenderEnable": false,
+    "useApiHook": false,
+    "useLanDebug": false,
+    "compileHotReLoad": false,
+    "useMultiFrameRuntime": false
+  }
+}
