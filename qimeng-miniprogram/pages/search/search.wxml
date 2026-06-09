@@ -1,0 +1,115 @@
+<view class="page-wrap" style="padding-top:{{headerHeight}}px;padding-bottom:{{pageBottom}}px">
+  <view class="search-bar">
+    <view class="search-input-wrap">
+      <text class="sym-icon search-sym">🔍</text>
+      <input
+        class="search-input"
+        placeholder="搜索人员、任务、活动"
+        placeholder-class="search-ph"
+        value="{{keyword}}"
+        focus="{{inputFocus}}"
+        confirm-type="search"
+        bindinput="onInput"
+        bindconfirm="onConfirm"
+      />
+    </view>
+    <text class="search-cancel" bindtap="onCancel">取消</text>
+  </view>
+
+  <!-- 历史搜索 -->
+  <block wx:if="{{!searched}}">
+    <view class="history-block" wx:if="{{history.length > 0}}">
+      <view class="history-hd">
+        <text class="history-title">历史搜索</text>
+        <text class="history-clear" bindtap="clearHistory">清除</text>
+      </view>
+      <view class="history-tags">
+        <view
+          class="history-tag"
+          wx:for="{{history}}"
+          wx:key="*this"
+          bindtap="onHistoryTap"
+          data-kw="{{item}}"
+        >{{item}}</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 加载 -->
+  <view class="search-loading" wx:if="{{searched && loading}}">搜索中…</view>
+
+  <!-- 无结果 -->
+  <view class="search-empty" wx:elif="{{searched && !loading && total === 0}}">
+    <text>未找到相关内容，换个词试试</text>
+  </view>
+
+  <!-- 搜索结果 -->
+  <block wx:elif="{{searched && !loading}}">
+    <!-- 人员 -->
+    <view class="result-sec" wx:if="{{users.length > 0}}">
+      <view class="result-sec-title">人员</view>
+      <view class="result-list">
+        <view
+          class="result-row user-row"
+          wx:for="{{users}}"
+          wx:key="id"
+          bindtap="openUser"
+          data-id="{{item.id}}"
+          hover-class="result-row-press"
+        >
+          <view class="result-av" style="background:{{item.bg}};color:{{item.c}};border-color:{{item.bc}}">
+            <image wx:if="{{item.avatarUrl}}" src="{{item.avatarUrl}}" class="contact-av-img" mode="aspectFill" />
+            <text wx:else>{{item.nameAbbr}}</text>
+          </view>
+          <view class="result-main">
+            <view class="result-title">{{item.name}}</view>
+            <view class="result-sub">{{item.job}}<text wx:if="{{item.job && item.co}}"> · </text>{{item.co}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 任务 -->
+    <view class="result-sec" wx:if="{{tasks.length > 0}}">
+      <view class="result-sec-title">任务</view>
+      <view class="result-list">
+        <view
+          class="result-row"
+          wx:for="{{tasks}}"
+          wx:key="id"
+          bindtap="openTask"
+          data-id="{{item.id}}"
+          hover-class="result-row-press"
+        >
+          <view class="result-main">
+            <view class="result-title">{{item.title}}</view>
+            <view class="result-sub">
+              <text class="result-credits">{{item.creditsStr}} 积分</text>
+              <text class="pl {{item.statusCls}}" style="margin-left:6px">{{item.statusLabel}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 活动 -->
+    <view class="result-sec" wx:if="{{activities.length > 0}}">
+      <view class="result-sec-title">活动</view>
+      <view class="result-list">
+        <view
+          class="result-row"
+          wx:for="{{activities}}"
+          wx:key="id"
+          bindtap="openActivity"
+          data-id="{{item.id}}"
+          hover-class="result-row-press"
+        >
+          <view class="result-main">
+            <view class="result-title">{{item.title}}</view>
+            <view class="result-sub">{{item.date}}<text wx:if="{{item.date && item.location}}"> · </text>{{item.location}}</view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </block>
+</view>

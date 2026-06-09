@@ -1,0 +1,75 @@
+.tbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+  display: flex;
+  align-items: stretch;
+  min-height: 56px;
+  padding-top: 8px;
+  padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  background: rgba(14, 15, 20, 0.92);
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  box-sizing: border-box;
+  backdrop-filter: blur(24px) saturate(1.15);
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 2px 0 4px;
+  position: relative;
+  min-width: 0;
+}
+
+.tlb {
+  font-size: 11px;
+  line-height: 1.2;
+  color: #71717a;
+  font-weight: 500;
+}
+
+.tab.on .tlb {
+  color: #60a5fa;
+  font-weight: 600;
+}
+
+.tab.on::after {
+  display: none;
+}
+
+.tab-icon {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-sym {
+  font-size: 21px;
+  line-height: 1;
+  opacity: 0.45;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.tab-sym.on {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.notif-dot {
+  position: absolute;
+  top: 2px;
+  right: 22%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ef4444;
+  border: 1.5px solid #0e0f14;
+}

@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/contacts/contacts",
+    "pages/tasks/tasks",
+    "pages/spaces/spaces",
+    "pages/station-hub/station-hub",
+    "pages/profit/profit",
+    "pages/profile/profile",
+    "pages/contribution/contribution",
+    "pages/inbox/inbox",
+    "pages/chat/chat",
+    "pages/search/search",
+    "pages/post-task/post-task",
+    "pages/post-activity/post-activity",
+    "pages/edit-profile/edit-profile",
+    "pages/admin-bookings/admin-bookings"
+  ],
+  "tabBar": {
+    "custom": true,
+    "color": "#4A4D65",
+    "selectedColor": "#5B8DEF",
+    "backgroundColor": "#0f1117",
+    "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/contacts/contacts", "text": "通讯录" },
+      { "pagePath": "pages/tasks/tasks", "text": "任务&活动" },
+      { "pagePath": "pages/profit/profit", "text": "分润" },
+      { "pagePath": "pages/profile/profile", "text": "我的" }
+    ]
+  },
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#0f1117",
+    "navigationBarTitleText": "企盟",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#0f1117"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

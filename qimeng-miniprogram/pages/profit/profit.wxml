@@ -1,0 +1,111 @@
+<view class="page-wrap" style="padding-top:{{headerHeight}}px;padding-bottom:{{pageBottom}}px">
+  <view class="nav profit-nav">
+    <text class="nav-t">分润看板</text>
+    <view class="nav-btn" bindtap="goContribution">贡献积分</view>
+  </view>
+
+  <view class="sk-list" wx:if="{{loading && !loadError}}">
+    <view class="sk-row" wx:for="{{[1,2,3]}}" wx:key="*this"></view>
+  </view>
+
+  <view class="state-box state-err" wx:elif="{{loadError}}">
+    <text>{{loadError}}</text>
+    <view class="btn bp btn-retry" bindtap="_load">点击重试</view>
+  </view>
+
+  <block wx:else>
+  <!-- ① 看板卡片 -->
+  <view class="dash-card">
+    <view class="dash-period" wx:if="{{dash.period}}">{{dash.period}} 本月</view>
+    <view class="dash-main">
+      <view class="dash-label">本月分润（元）</view>
+      <view class="dash-val">{{dash.monthTotalYuan}}</view>
+    </view>
+    <view class="dash-grid">
+      <view class="dash-cell">
+        <view class="dash-cell-label">累计分润</view>
+        <view class="dash-cell-val">{{dash.totalYuan}}</view>
+      </view>
+      <view class="dash-cell">
+        <view class="dash-cell-label">待发放</view>
+        <view class="dash-cell-val warn">{{dash.pendingYuan}}</view>
+      </view>
+      <view class="dash-cell">
+        <view class="dash-cell-label">已发放</view>
+        <view class="dash-cell-val">{{dash.paidYuan}}</view>
+      </view>
+      <view class="dash-cell">
+        <view class="dash-cell-label">引荐人数</view>
+        <view class="dash-cell-val">{{dash.refereeCount}}</view>
+      </view>
+    </view>
+    <view class="quota-row">
+      <text class="quota-label">体验额度剩余（元）</text>
+      <text class="quota-val">{{quota.remainingYuan}}</text>
+      <text class="quota-sub">累计 {{quota.totalYuan}} · 已用 {{quota.usedYuan}}</text>
+    </view>
+  </view>
+
+  <!-- ② 引荐裂变 -->
+  <view class="sec">引荐裂变 ({{referralList.length}})</view>
+  <view class="cw" wx:if="{{referralList.length}}">
+    <view class="list-row" wx:for="{{referralList}}" wx:key="user_id">
+      <view class="list-main">
+        <view class="list-title">{{item.name}}</view>
+        <view class="list-sub">{{item.relation}} · 二级 {{item.second_level_count}} 人</view>
+      </view>
+    </view>
+  </view>
+  <view class="cw empty-hint" wx:else>
+    <text>暂无引荐记录</text>
+  </view>
+
+  <!-- ③ 分润流水 -->
+  <view class="sec">分润流水 ({{recordList.length}})</view>
+  <view class="cw" wx:if="{{recordList.length}}">
+    <view class="list-row profit-record-row" wx:for="{{recordList}}" wx:key="id">
+      <view class="list-main">
+        <view class="list-title">{{item.note || item.source}}</view>
+        <view class="list-sub">{{item.period}} · {{item.date}} · {{item.statusLabel}}</view>
+      </view>
+      <view class="profit-record-right">
+        <view class="list-amt">+{{item.amountYuan}}</view>
+        <view class="profit-confirm-btn" wx:if="{{item.canConfirm}}" catchtap="confirmRecord" data-id="{{item.id}}">确认</view>
+      </view>
+    </view>
+  </view>
+  <view class="cw empty-hint" wx:else>
+    <text>暂无分润流水</text>
+  </view>
+
+  <!-- ④ 我的引荐 / 渠道工作台 -->
+  <view class="sec">我的引荐</view>
+  <view class="cw channel-card">
+    <view class="channel-link-row">
+      <view class="channel-link-label">引荐链接</view>
+      <view class="channel-link-text">{{myLink || '暂无'}}</view>
+      <view class="channel-copy-btn" bindtap="copyLink">复制</view>
+    </view>
+    <view class="channel-grid">
+      <view class="channel-cell">
+        <view class="channel-cell-label">引荐人数</view>
+        <view class="channel-cell-val">{{channelSummary.referee_count}}</view>
+      </view>
+      <view class="channel-cell">
+        <view class="channel-cell-label">注册贡献</view>
+        <view class="channel-cell-val">{{channelSummary.register_contrib}}</view>
+      </view>
+      <view class="channel-cell">
+        <view class="channel-cell-label">付费贡献</view>
+        <view class="channel-cell-val">{{channelSummary.paid_contrib}}</view>
+      </view>
+      <view class="channel-cell">
+        <view class="channel-cell-label">会费分润（元）</view>
+        <view class="channel-cell-val accent">{{channelSummary.member_fee_profit_yuan}}</view>
+      </view>
+    </view>
+  </view>
+  </block>
+</view>
+
+<custom-tab-bar />

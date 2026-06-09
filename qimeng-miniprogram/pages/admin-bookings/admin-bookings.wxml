@@ -1,0 +1,134 @@
+<view class="page-wrap" style="padding-top:{{headerHeight}}px;padding-bottom:{{pageBottom}}px">
+  <view class="nav">
+    <text class="nav-t">空间预约管理</text>
+  </view>
+
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <view class="filter-section">
+      <text class="filter-label">审核状态：</text>
+      <view class="filter-tags">
+        <view class="filter-tag {{!filterAuditStatus ? 'active' : ''}}" bindtap="onAuditFilter" data-value="">全部</view>
+        <view class="filter-tag {{filterAuditStatus === 'pending' ? 'active' : ''}}" bindtap="onAuditFilter" data-value="pending">待审核</view>
+        <view class="filter-tag {{filterAuditStatus === 'approved' ? 'active' : ''}}" bindtap="onAuditFilter" data-value="approved">已通过</view>
+        <view class="filter-tag {{filterAuditStatus === 'rejected' ? 'active' : ''}}" bindtap="onAuditFilter" data-value="rejected">已拒绝</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="sec">预约列表 ({{bookings.length}})</view>
+
+  <view wx:if="{{loading}}" class="loading-container">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <view wx:elif="{{bookings.length === 0}}" class="empty-container">
+    <text class="empty-text">暂无预约记录</text>
+  </view>
+
+  <view wx:else>
+    <view class="booking-item" wx:for="{{bookings}}" wx:key="id" bindtap="openBookingDetail" data-id="{{item.id}}">
+      <view class="booking-header">
+        <view class="booking-space-name">{{item.space_name}}</view>
+        <view class="audit-status {{item.auditStatusClass}}">{{item.auditStatusText}}</view>
+      </view>
+      <view class="booking-info">
+        <text class="booking-label">预约人：</text>
+        <text class="booking-value">{{item.user_name}}</text>
+      </view>
+      <view class="booking-info">
+        <text class="booking-label">时间：</text>
+        <text class="booking-value">{{item.startDateTime}} - {{item.endDateTime}}</text>
+      </view>
+      <view class="booking-info" wx:if="{{item.purpose}}">
+        <text class="booking-label">目的：</text>
+        <text class="booking-value">{{item.purpose}}</text>
+      </view>
+      <view class="booking-actions" wx:if="{{item.audit_status === 'pending'}}">
+        <view class="action-btn approve-btn" catchtap="approveBooking" data-id="{{item.id}}">通过</view>
+        <view class="action-btn reject-btn" catchtap="openRejectModal" data-id="{{item.id}}">拒绝</view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 预约详情弹窗 -->
+<view class="ov" wx:if="{{showDetailModal && selectedBooking}}" bindtap="closeModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">预约详情</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <scroll-view class="mbody" scroll-y>
+      <view class="detail-section">
+        <text class="detail-label">空间名称</text>
+        <text class="detail-value">{{selectedBooking.space_name}}</text>
+      </view>
+      <view class="detail-section">
+        <text class="detail-label">预约人</text>
+        <text class="detail-value">{{selectedBooking.user_name}}</text>
+      </view>
+      <view class="detail-section">
+        <text class="detail-label">开始时间</text>
+        <text class="detail-value">{{selectedBooking.startDateTime}}</text>
+      </view>
+      <view class="detail-section">
+        <text class="detail-label">结束时间</text>
+        <text class="detail-value">{{selectedBooking.endDateTime}}</text>
+      </view>
+      <view class="detail-section" wx:if="{{selectedBooking.purpose}}">
+        <text class="detail-label">使用目的</text>
+        <text class="detail-value">{{selectedBooking.purpose}}</text>
+      </view>
+      <view class="detail-section">
+        <text class="detail-label">参与人数</text>
+        <text class="detail-value">{{selectedBooking.participant_count}}人</text>
+      </view>
+      <view class="detail-section" wx:if="{{selectedBooking.note}}">
+        <text class="detail-label">备注</text>
+        <text class="detail-value">{{selectedBooking.note}}</text>
+      </view>
+      <view class="detail-section">
+        <text class="detail-label">审核状态</text>
+        <text class="detail-value">
+          <text class="audit-status {{selectedBooking.auditStatusClass}}">{{selectedBooking.auditStatusText}}</text>
+        </text>
+      </view>
+      <view class="detail-section" wx:if="{{selectedBooking.reject_reason}}">
+        <text class="detail-label">拒绝原因</text>
+        <text class="detail-value reject-reason">{{selectedBooking.reject_reason}}</text>
+      </view>
+      <view class="detail-section">
+        <text class="detail-label">提交时间</text>
+        <text class="detail-value">{{selectedBooking.createdAt}}</text>
+      </view>
+      
+      <view class="modal-actions" wx:if="{{selectedBooking.audit_status === 'pending'}}">
+        <view class="btn bs" catchtap="closeModal">关闭</view>
+        <view class="btn bp" catchtap="approveBooking" data-id="{{selectedBooking.id}}">通过</view>
+        <view class="btn br" catchtap="openRejectModal" data-id="{{selectedBooking.id}}">拒绝</view>
+      </view>
+      <view class="btn bs" wx:else bindtap="closeModal" style="margin-top:16px">关闭</view>
+    </scroll-view>
+  </view>
+</view>
+
+<!-- 拒绝原因弹窗 -->
+<view class="ov" wx:if="{{showRejectModal && selectedBooking}}" bindtap="closeModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">拒绝预约</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <view class="mbody">
+      <view class="fg">
+        <text class="fl">拒绝原因</text>
+        <textarea class="fta" placeholder="请输入拒绝原因" value="{{rejectReason}}" bindinput="onRejectReasonInput" />
+      </view>
+      <view class="modal-actions">
+        <view class="btn bs" catchtap="closeModal">取消</view>
+        <view class="btn br" catchtap="confirmReject">确认拒绝</view>
+      </view>
+    </view>
+  </view>
+</view>

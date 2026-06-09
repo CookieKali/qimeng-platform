@@ -1,0 +1,32 @@
+/* Glyph rules only — @font-face in iconfont-face.wxss (base64, imported by app.wxss) */
+
+.iconfont {
+  font-family: 'iconfont' !important;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.iconfont::before {
+  display: block;
+}
+
+.icon-user::before { content: '\f101'; }
+.icon-task::before { content: '\f102'; }
+.icon-task-list::before { content: '\f103'; }
+.icon-search::before { content: '\f104'; }
+.icon-recommend::before { content: '\f105'; }
+.icon-phone::before { content: '\f106'; }
+.icon-notification::before { content: '\f107'; }
+.icon-mail::before { content: '\f108'; }
+.icon-lock::before { content: '\f109'; }
+.icon-friends::before { content: '\f10a'; }
+.icon-contacts::before { content: '\f10b'; }
+.icon-community::before { content: '\f10c'; }
+.icon-calendar::before { content: '\f10d'; }
+.icon-activity::before { content: '\f10e'; }

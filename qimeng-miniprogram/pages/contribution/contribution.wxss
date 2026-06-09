@@ -1,0 +1,151 @@
+.page-wrap { background: transparent; }
+
+.nav-back {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--qm-accent-light);
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.contrib-balance-card {
+  margin: 10px 12px;
+  padding: 16px;
+  background: #091626;
+  border: 1.5px solid #1a3860;
+  border-radius: 15px;
+  text-align: center;
+}
+
+.contrib-balance-label {
+  font-size: 11px;
+  color: #7090b0;
+  font-weight: 700;
+}
+
+.contrib-balance-val {
+  font-size: 36px;
+  font-weight: 900;
+  color: #28e880;
+  margin: 8px 0 4px;
+  line-height: 1.1;
+}
+
+.contrib-balance-hint {
+  font-size: 10px;
+  color: #3a5878;
+  font-weight: 600;
+}
+
+.contrib-actions {
+  margin: 0 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.contrib-action-btn {
+  background: #070d1a;
+  border: 1.5px solid #1c2e48;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.contrib-action-btn:active {
+  opacity: 0.85;
+  border-color: #2a5080;
+}
+
+.contrib-action-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #e0eefc;
+}
+
+.contrib-action-cost {
+  font-size: 12px;
+  color: var(--qm-accent-light);
+  font-weight: 700;
+  margin-top: 4px;
+}
+
+.contrib-action-sub {
+  font-size: 10px;
+  color: #7090b0;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.contrib-boost-picker {
+  margin-top: 8px;
+  padding: 8px 10px;
+  font-size: 11px;
+  color: #a8c8e8;
+  font-weight: 600;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.22);
+  border-radius: 8px;
+}
+
+.contrib-log-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 13px;
+  border-bottom: 1px solid #121e30;
+}
+
+.contrib-log-row:last-child {
+  border-bottom: none;
+}
+
+.contrib-log-source {
+  font-size: 12px;
+  font-weight: 700;
+  color: #c8d8f0;
+}
+
+.contrib-log-note {
+  font-size: 10px;
+  color: #7090b0;
+  margin-top: 3px;
+  font-weight: 500;
+}
+
+.contrib-log-time {
+  font-size: 10px;
+  color: #3a5878;
+  margin-top: 4px;
+}
+
+.contrib-log-amt {
+  font-size: 14px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.state-box {
+  margin: 12px;
+  padding: 28px 16px;
+  text-align: center;
+  font-size: 14px;
+  color: #6a8aaa;
+  background: rgba(14, 24, 48, 0.6);
+  border-radius: 14px;
+  border: 1px solid #1c2e48;
+}
+
+.state-err { color: #ff9898; }
+
+.btn-retry {
+  margin: 14px auto 0;
+  max-width: 200px;
+}
+
+.empty-hint {
+  padding: 24px;
+  text-align: center;
+  font-size: 12px;
+  color: #7090b0;
+}

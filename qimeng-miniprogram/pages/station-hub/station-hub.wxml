@@ -1,0 +1,100 @@
+<view class="page-wrap" style="padding-top:{{headerHeight}}px;padding-bottom:{{pageBottom}}px">
+  <view class="nav">
+    <view class="nav-btn" bindtap="goBack">返回</view>
+    <text class="nav-t">空间站</text>
+    <view class="nav-btn" bindtap="goBookSpace" wx:if="{{hub}}">预约场地</view>
+  </view>
+
+  <view class="hub-loading" wx:if="{{loading}}">加载中…</view>
+
+  <block wx:elif="{{hub}}">
+    <!-- Banner 封面图 / 渐变占位 -->
+    <view class="hub-banner">
+      <image wx:if="{{hub.coverUrl}}" class="hub-banner-img" src="{{hub.coverUrl}}" mode="aspectFill" />
+      <view wx:else class="hub-banner-bg"></view>
+      <view class="hub-banner-overlay">
+        <view class="hub-banner-name">{{hub.name}}</view>
+        <view class="hub-banner-meta">{{hub.region}}<text wx:if="{{hub.address}}"> · {{hub.address}}</text></view>
+      </view>
+    </view>
+
+    <!-- 简介 & 站长 -->
+    <view class="hub-info-card" wx:if="{{hub.description || hub.operatorName}}">
+      <view class="hub-desc" wx:if="{{hub.description}}">{{hub.description}}</view>
+      <view class="hub-operator-row" wx:if="{{hub.operatorName}}">
+        <view class="hub-operator-dot"></view>
+        <text class="hub-operator-text">站长 {{hub.operatorName}}</text>
+      </view>
+    </view>
+
+    <!-- 数据统计 -->
+    <view class="hub-stats">
+      <view class="hub-stat">
+        <view class="hub-stat-val">{{hub.memberCount}}</view>
+        <view class="hub-stat-k">成员</view>
+      </view>
+      <view class="hub-stat">
+        <view class="hub-stat-val">{{hub.shareholderCount}}</view>
+        <view class="hub-stat-k">股东</view>
+      </view>
+      <view class="hub-stat">
+        <view class="hub-stat-val">{{hub.spaceCount}}</view>
+        <view class="hub-stat-k">场地</view>
+      </view>
+      <view class="hub-stat">
+        <view class="hub-stat-val">{{hub.annualRevenueWan}}</view>
+        <view class="hub-stat-k">年营收</view>
+      </view>
+    </view>
+
+    <!-- 可预约场地 -->
+    <view class="sec">可预约场地 ({{hub.spaces.length}})</view>
+    <view class="hub-empty" wx:if="{{!hub.spaces.length}}">暂无场地，请联系站长</view>
+    <view class="hub-space-card" wx:for="{{hub.spaces}}" wx:key="id" bindtap="openSpace" data-id="{{item.id}}">
+      <!-- 场地封面图 -->
+      <view class="hub-space-cover">
+        <image wx:if="{{item.cover_url || item.image_url}}" class="hub-space-cover-img"
+               src="{{item.cover_url || item.image_url}}" mode="aspectFill" />
+        <view wx:else class="hub-space-cover-bg">
+          <text class="hub-space-cover-icon">🏢</text>
+        </view>
+        <text class="hub-space-type-tag">{{item.type}}</text>
+      </view>
+      <!-- 场地信息 -->
+      <view class="hub-space-info">
+        <view class="hub-space-name">{{item.name}}</view>
+        <view class="hub-space-sub-row">
+          <text wx:if="{{item.capacity}}" class="hub-space-chip">{{item.capacity}}人</text>
+          <text wx:if="{{item.available_hours}}" class="hub-space-chip">{{item.available_hours}}</text>
+        </view>
+        <view class="hub-space-footer">
+          <text class="hub-space-price" wx:if="{{item.price_per_hour > 0}}">{{item.price_per_hour}} 积分/时</text>
+          <text class="hub-space-price hub-space-free" wx:else>免费体验</text>
+          <text class="hub-space-book-btn">预约 ›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 联席股东 -->
+    <view class="sec">联席股东 ({{hub.shareholders.length}})</view>
+    <view class="hub-empty" wx:if="{{!hub.shareholders.length}}">股东信息筹备中</view>
+    <view class="hub-sh-card" wx:for="{{hub.shareholders}}" wx:key="user_id">
+      <view class="hub-sh-avatar">
+        <text>{{item.name.substring(0,1)}}</text>
+      </view>
+      <view class="hub-sh-info">
+        <view class="hub-sh-name">{{item.name}}</view>
+        <view class="hub-sh-sub">{{item.industry}} · {{item.shares}} 股 · 投资约 {{item.investWan}}</view>
+      </view>
+    </view>
+
+    <!-- 月度结算 -->
+    <view class="sec" wx:if="{{hub.settlements.length}}">月度结算</view>
+    <view class="hub-settle-row" wx:for="{{hub.settlements}}" wx:key="period">
+      <view class="hub-settle-period">{{item.period}}</view>
+      <view class="hub-settle-sub">营收 {{item.revenueWan}} · 净利 {{item.netWan}} · 已分 {{item.distributedWan}}</view>
+    </view>
+  </block>
+
+  <view class="hub-empty" wx:else>空间站不存在或已下线</view>
+</view>

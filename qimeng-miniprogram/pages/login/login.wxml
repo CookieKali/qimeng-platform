@@ -1,0 +1,89 @@
+<view class="login-page">
+  <view class="login-bg login-bg-a"></view>
+  <view class="login-bg login-bg-b"></view>
+  <view class="login-safe-top" style="height:{{headerHeight}}px"></view>
+
+  <scroll-view class="login-scroll" scroll-y show-scrollbar="{{false}}">
+    <view class="login-body">
+      <view class="brand-card">
+        <view class="brand-mark">企</view>
+        <view class="brand-text">
+          <view class="login-logo">企 盟</view>
+          <view class="login-sub">实名制私域社交 · 资源协作操作系统</view>
+        </view>
+      </view>
+
+      <view class="login-panel">
+        <!-- 分享引导 -->
+        <view class="share-guide" wx:if="{{shareInfo && shareInfo.sharer}}">
+          <view class="share-guide-avatar">
+            <text wx:if="{{!shareInfo.sharer.avatar_url}}" class="share-guide-avatar-text">{{shareInfo.sharer.name ? shareInfo.sharer.name.slice(0, 2) : '?'}}</text>
+            <image wx:else class="share-guide-avatar-img" src="{{shareInfo.sharer.avatar_url}}" mode="aspectFill" />
+          </view>
+          <view class="share-guide-info">
+            <view class="share-guide-name">{{shareInfo.sharer.name}}邀请您加入</view>
+            <view class="share-guide-desc" wx:if="{{shareInfo.sharer.card && shareInfo.sharer.card.company}}">{{shareInfo.sharer.card.company}}{{shareInfo.sharer.card.job_title ? ' · ' + shareInfo.sharer.card.job_title : ''}}</view>
+          </view>
+        </view>
+
+        <view class="panel-title">{{isRegister ? '申请加入企盟' : '欢迎回来'}}</view>
+        <view class="panel-desc">演示 123456 · 好友联调 18800000001 / 02</view>
+        <view class="panel-hint">密码均为 123456</view>
+        <view class="api-hint">{{apiHint}}</view>
+
+        <block wx:if="{{isRegister}}">
+          <view class="field-wrap">
+            <text class="field-label">姓名</text>
+            <input class="login-field" placeholder="请输入姓名" model:value="{{regName}}" />
+          </view>
+          <view class="field-wrap" wx:if="{{inviteCode || !shareCode}}">
+            <text class="field-label">邀请码</text>
+            <input class="login-field" placeholder="QM-2026-001" model:value="{{inviteCode}}" />
+          </view>
+        </block>
+
+        <view class="field-wrap">
+          <text class="field-label">手机号</text>
+          <input
+            class="login-field"
+            type="digit"
+            placeholder="请输入手机号"
+            model:value="{{phone}}"
+            maxlength="11"
+            adjust-position="{{true}}"
+            hold-keyboard="{{true}}"
+          />
+        </view>
+
+        <view class="field-wrap">
+          <text class="field-label">密码</text>
+          <input
+            class="login-field"
+            password="{{true}}"
+            placeholder="请输入密码"
+            model:value="{{password}}"
+            adjust-position="{{true}}"
+            hold-keyboard="{{true}}"
+          />
+        </view>
+
+        <view class="login-err" wx:if="{{loginErr}}">{{loginErr}}</view>
+
+        <button class="login-btn" bindtap="doLogin" loading="{{loading}}" disabled="{{loading}}">
+          {{isRegister ? '立即注册' : '登录'}}
+        </button>
+
+        <view class="login-switch" bindtap="switchMode">
+          <text wx:if="{{isRegister}}">已有账号？<text class="login-switch-link">立即登录</text></text>
+          <text wx:else>还没有账号？<text class="login-switch-link">申请注册</text></text>
+        </view>
+      </view>
+
+      <view class="login-metrics">
+        <view class="metric"><text class="metric-v">13</text><text class="metric-k">业务模块</text></view>
+        <view class="metric"><text class="metric-v">SSS</text><text class="metric-k">信用等级</text></view>
+        <view class="metric"><text class="metric-v">5城</text><text class="metric-k">空间节点</text></view>
+      </view>
+    </view>
+  </scroll-view>
+</view>

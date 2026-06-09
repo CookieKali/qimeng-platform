@@ -1,0 +1,67 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+venv/
+env/
+.venv/
+.env/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# SQLite 数据库（本地开发数据，不上传）
+backend/qimeng.db
+backend/*.db
+
+# 用户上传文件
+backend/uploads/
+
+# 环境变量 / 密钥
+.env
+.env.*
+*.secret
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# IDE / 本地工具
+.idea/
+.vscode/
+.cursor/
+*.swp
+*.swo
+
+# 本地运行状态（勿提交）
+.run/
+
+# Node
+node_modules/
+npm-debug.log*
+
+# 微信小程序
+miniprogram_npm/
+.miniprogram-ide-*
+
+# 日志
+*.log
+logs/
+
+# 临时文件
+*.tmp
+*.bak
+qimeng.db
+*.db
+上传到GitHub.command
+企盟-提交代码.command

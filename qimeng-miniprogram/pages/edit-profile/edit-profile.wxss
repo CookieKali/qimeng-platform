@@ -1,0 +1,408 @@
+.ep-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--qm-bg);
+  box-sizing: border-box;
+}
+
+.ep-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px 10px;
+  background: rgba(10, 11, 15, 0.88);
+  border-bottom: 1px solid var(--qm-border);
+  flex-shrink: 0;
+  backdrop-filter: blur(20px);
+}
+
+.ep-nav-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.ep-nav-btn {
+  min-width: 52px;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 6px 4px;
+}
+
+.ep-nav-muted {
+  color: #9499b0;
+}
+
+.ep-nav-primary {
+  color: var(--qm-accent-light);
+  text-align: right;
+}
+
+.ep-nav-disabled {
+  opacity: 0.45;
+}
+
+.ep-nav-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--qm-text);
+}
+
+.ep-save-status {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 16px;
+}
+
+.ep-save-saving {
+  color: #9499b0;
+}
+
+.ep-save-saved {
+  color: #22c55e;
+}
+
+.ep-save-error {
+  color: #f87171;
+}
+
+.ep-scroll {
+  flex: 1;
+  min-height: 0;
+  padding: 0 16px;
+  box-sizing: border-box;
+}
+
+.ep-hint {
+  font-size: 13px;
+  color: #6b7088;
+  line-height: 1.5;
+  padding: 14px 4px 8px;
+}
+
+.ep-hint-dot {
+  padding-top: 0;
+  padding-bottom: 10px;
+  font-size: 12px;
+  color: #9499b0;
+}
+
+.ep-label-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 72px;
+  flex-shrink: 0;
+}
+
+.ep-label-row .ep-label {
+  width: auto;
+}
+
+.ep-field-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ef4444;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.22);
+}
+
+.ep-stack-label-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.ep-stack-label-row .ep-stack-label {
+  margin-bottom: 0;
+}
+
+.ep-bizmap-label-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.ep-bizmap-label-row .ep-bizmap-label {
+  margin-bottom: 0;
+}
+
+.ep-section {
+  margin-bottom: 20px;
+}
+
+.ep-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #9499b0;
+  padding: 0 4px 8px;
+  letter-spacing: 0.02em;
+}
+
+.ep-group {
+  background: var(--qm-surface);
+  border-radius: 14px;
+  border: 1px solid var(--qm-border);
+  overflow: hidden;
+}
+
+.ep-group-stack {
+  padding: 4px 0;
+}
+
+.ep-cell {
+  display: flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--qm-border);
+  box-sizing: border-box;
+}
+
+.ep-cell-last {
+  border-bottom: none;
+}
+
+.ep-cell-readonly {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.ep-label {
+  width: 72px;
+  flex-shrink: 0;
+  font-size: 15px;
+  color: #f1f3f9;
+  font-weight: 500;
+}
+
+.ep-input {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  color: #f1f3f9;
+  text-align: right;
+  height: 32px;
+  line-height: 32px;
+}
+
+.ep-value-muted {
+  flex: 1;
+  font-size: 15px;
+  color: #6b7088;
+  text-align: right;
+}
+
+.ep-picker {
+  flex: 1;
+  min-width: 0;
+  font-size: 15px;
+  color: #f1f3f9;
+  text-align: right;
+  line-height: 32px;
+}
+
+.ep-chevron {
+  margin-left: 6px;
+  font-size: 18px;
+  color: #4a4d65;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.ep-ph {
+  color: #4a4d65;
+}
+
+.ep-stack-cell {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--qm-border);
+}
+
+.ep-stack-cell-last {
+  border-bottom: none;
+}
+
+.ep-stack-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #f1f3f9;
+  margin-bottom: 8px;
+}
+
+.ep-textarea {
+  width: 100%;
+  min-height: 72px;
+  padding: 10px 12px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 1px solid var(--qm-border);
+  background: var(--qm-bg);
+  color: #f1f3f9;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.ep-scroll-bottom {
+  height: 24px;
+}
+
+.ep-footer {
+  flex-shrink: 0;
+  padding: 10px 16px 12px;
+  background: rgba(15, 17, 23, 0.98);
+  border-top: 1px solid var(--qm-border);
+}
+
+.ep-save-btn {
+  width: 100%;
+  border-radius: 12px;
+  padding: 13px 0;
+  font-size: 16px;
+}
+
+.ep-save-disabled {
+  opacity: 0.55;
+}
+
+.ep-sub-block {
+  margin-bottom: 12px;
+}
+
+.ep-field-hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #6b7088;
+  line-height: 1.4;
+}
+
+.ep-role-group {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ep-role-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1.5px solid var(--qm-border);
+  background: var(--qm-bg);
+  box-sizing: border-box;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.ep-role-chip-on {
+  border-color: rgba(59, 130, 246, 0.65);
+  background: rgba(59, 130, 246, 0.14);
+}
+
+.ep-role-check {
+  font-size: 12px;
+  color: var(--qm-accent-light, #60a5fa);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.ep-role-chip-on .ep-role-text {
+  color: var(--qm-accent-light, #60a5fa);
+  font-weight: 600;
+}
+
+.ep-role-text {
+  font-size: 13px;
+  color: #9499b0;
+  font-weight: 500;
+}
+
+.ep-bizmap-hd {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ep-bizmap-count {
+  margin-top: 0;
+}
+
+.ep-bizmap-item {
+  margin: 0 14px 12px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--qm-border);
+  background: var(--qm-bg);
+}
+
+.ep-bizmap-item-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.ep-bizmap-item-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #9499b0;
+}
+
+.ep-bizmap-remove {
+  font-size: 13px;
+  color: #f87171;
+  font-weight: 600;
+  padding: 4px 2px;
+}
+
+.ep-bizmap-field {
+  margin-bottom: 10px;
+}
+
+.ep-bizmap-field-last {
+  margin-bottom: 0;
+}
+
+.ep-bizmap-label {
+  display: block;
+  font-size: 12px;
+  color: #9499b0;
+  margin-bottom: 6px;
+}
+
+.ep-bizmap-input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid var(--qm-border);
+  background: var(--qm-surface);
+  color: #f1f3f9;
+  font-size: 14px;
+}
+
+.ep-bizmap-add-wrap {
+  padding: 4px 14px 14px;
+}
+
+.ep-bizmap-add {
+  height: 44px;
+  line-height: 44px;
+  text-align: center;
+  border-radius: 12px;
+  border: 1.5px dashed rgba(59, 130, 246, 0.45);
+  color: var(--qm-accent-light, #60a5fa);
+  font-size: 14px;
+  font-weight: 600;
+}

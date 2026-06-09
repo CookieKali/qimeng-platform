@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//private/tmp/**)",
+      "Bash(npm root *)",
+      "Bash(NODE_PATH=$\\(npm root -g\\) node gen_qimeng_doc.js)",
+      "Bash(python3 '/Users/huqihan/Library/Application Support/Claude/local-agent-mode-sessions/skills-plugin/04b20926-5faa-4e8e-980f-ea051073e685/3a823752-7a32-43eb-a69d-31bfa9ab934b/skills/docx/scripts/office/validate.py' /Users/huqihan/Desktop/企盟项目_实现vs需求_对比报告.docx)",
+      "Bash(ls -la /Users/huqihan/Desktop/企盟项目_*.docx)",
+      "Bash(python3 -c \"import openpyxl; print\\(openpyxl.__version__\\)\")",
+      "Bash(../.venv/bin/pytest tests/ -v)",
+      "Bash(../.venv/bin/pytest tests/ -q)",
+      "Bash(../.venv/bin/python -c \"from backend.app.main import app; print\\('OK routers:', len\\(app.routes\\)\\)\")",
+      "Bash(../.venv/bin/python -c \"from app.main import app; print\\('OK 路由总数:', len\\(app.routes\\)\\)\")",
+      "Bash(../.venv/bin/python -c ' *)",
+      "Bash(python3 -c \"import matplotlib; print\\('mpl', matplotlib.__version__\\)\")",
+      "Read(//System/Library/Fonts/**)",
+      "Bash(fc-list)",
+      "Bash(cat)",
+      "Bash(python3 mkimg.py)",
+      "Bash(python3 -c \"from PIL import Image; [print\\(f, Image.open\\('/tmp/'+f\\).size\\) for f in ['img_progress.png','img_flow.png','img_donut.png']]\")",
+      "Bash(NODE_PATH=$\\(npm root -g\\) node gen_report.js)",
+      "Bash(unzip -l \"/Users/huqihan/Desktop/企盟项目_进度汇报.docx\")",
+      "Bash(sed -n '230,270p' backend/app/routers/tasks.py)",
+      "Bash(sed -n '145,170p' qimeng-miniprogram/pages/spaces/spaces.js)",
+      "Bash(NODE_PATH=$\\(npm root -g\\) node gen_qual.js)",
+      "Bash(python3 -c ' *)",
+      "Bash(../.venv/bin/python /tmp/verify_escrow.py)",
+      "Bash(PYTHONPATH=. ../.venv/bin/python /tmp/verify_escrow.py)",
+      "Bash(PYTHONPATH=backend ../.venv/bin/python -c \"import sys; sys.path.insert\\(0,'backend'\\)\")",
+      "Bash(PYTHONPATH=. ../.venv/bin/python /tmp/trace_review.py)",
+      "Bash(../.venv/bin/pytest tests/test_settlement.py -q)",
+      "Bash(../.venv/bin/pytest tests/test_settlement.py::test_pro_tier_scales -q)",
+      "Bash(../.venv/bin/pytest tests/test_settlement.py::test_pro_tier_scales)",
+      "Bash(../.venv/bin/pytest tests/test_contribution.py -q)"
+    ]
+  }
+}

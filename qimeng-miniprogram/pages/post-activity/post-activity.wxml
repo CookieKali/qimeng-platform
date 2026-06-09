@@ -1,0 +1,136 @@
+<view class="page-wrap" style="padding-top:{{headerHeight}}px">
+  <view class="post-nav">
+    <view class="post-nav-side post-nav-cancel" bindtap="onCancel">取消</view>
+    <text class="post-nav-title">{{isEditMode ? '编辑活动' : '发布活动'}}</text>
+    <view class="post-nav-side"></view>
+  </view>
+
+  <view class="post-body">
+    <view class="fg cover-fg">
+      <text class="fl">封面图（选填）</text>
+      <view class="cover-box" wx:if="{{!form.coverPreview}}" bindtap="chooseCover">
+        <text wx:if="{{!coverUploading}}" class="cover-placeholder">点击上传封面</text>
+        <view wx:else class="cover-loading">
+          <view class="cover-loading-spinner"></view>
+          <text>上传中...</text>
+        </view>
+      </view>
+      <view class="cover-preview-wrap" wx:else>
+        <image class="cover-preview" src="{{form.coverPreview}}" mode="aspectFill" />
+        <view class="cover-upload-mask" wx:if="{{coverUploading}}">上传中…</view>
+        <view class="cover-remove" catchtap="removeCover">×</view>
+      </view>
+    </view>
+
+    <view class="post-hint">
+      <text wx:if="{{!isEditMode}}">活动发布后将展示在活动广场，好友可在线报名参与。</text>
+      <text wx:else>开始时间与人数上限发布后不可修改，其余信息可随时更新。</text>
+    </view>
+
+    <view class="fg">
+      <text class="fl">活动标题 <text class="required">*</text></text>
+      <input
+        class="fi {{formErrors.title ? 'error' : ''}}"
+        placeholder="请输入活动标题（2-128字符）"
+        value="{{form.title}}"
+        bindinput="onField"
+        data-key="title"
+        maxlength="128"
+      />
+      <text class="field-error" wx:if="{{formErrors.title}}">{{formErrors.title}}</text>
+    </view>
+
+    <view class="fg">
+      <text class="fl">活动类型</text>
+      <picker mode="selector" range="{{types}}" value="{{form.typeIdx}}" bindchange="onTypeChange">
+        <view class="fsl">{{types[form.typeIdx]}}</view>
+      </picker>
+    </view>
+
+    <view class="fg {{isEditMode ? 'fg-readonly' : ''}}">
+      <text class="fl">开始时间 <text class="required">*</text></text>
+      <view class="datetime-row">
+        <picker mode="date" value="{{form.startDate}}" bindchange="onStartDateChange" disabled="{{isEditMode}}">
+          <view class="fsl">{{form.startDate}}</view>
+        </picker>
+        <picker mode="time" value="{{form.startTime}}" bindchange="onStartTimeChange" disabled="{{isEditMode}}">
+          <view class="fsl time-pick">{{form.startTime}}</view>
+        </picker>
+      </view>
+      <text class="field-error" wx:if="{{formErrors.startDate}}">{{formErrors.startDate}}</text>
+    </view>
+
+    <view class="fg">
+      <text class="fl">结束时间（选填）</text>
+      <view class="datetime-row">
+        <picker mode="date" value="{{form.endDate}}" bindchange="onEndDateChange">
+          <view class="fsl">{{form.endDate || '选择日期'}}</view>
+        </picker>
+        <picker mode="time" value="{{form.endTime}}" bindchange="onEndTimeChange">
+          <view class="fsl time-pick">{{form.endTime}}</view>
+        </picker>
+      </view>
+      <text class="field-error" wx:if="{{formErrors.endDate}}">{{formErrors.endDate}}</text>
+    </view>
+
+    <view class="fg">
+      <text class="fl">活动地点 <text class="required">*</text></text>
+      <input
+        class="fi {{formErrors.location ? 'error' : ''}}"
+        placeholder="线下地址或线上会议说明"
+        value="{{form.location}}"
+        bindinput="onField"
+        data-key="location"
+        maxlength="255"
+      />
+      <text class="field-error" wx:if="{{formErrors.location}}">{{formErrors.location}}</text>
+    </view>
+
+    <view class="fg {{isEditMode ? 'fg-readonly' : ''}}">
+      <text class="fl">人数上限</text>
+      <input
+        class="fi {{formErrors.capacity ? 'error' : ''}}"
+        type="number"
+        placeholder="20"
+        value="{{form.capacity}}"
+        bindinput="onField"
+        data-key="capacity"
+        disabled="{{isEditMode}}"
+      />
+      <text class="field-error" wx:if="{{formErrors.capacity}}">{{formErrors.capacity}}</text>
+    </view>
+
+    <view class="fg">
+      <text class="fl">活动简介</text>
+      <textarea
+        class="fta"
+        placeholder="选填：议程、嘉宾、注意事项等"
+        value="{{form.desc}}"
+        bindinput="onField"
+        data-key="desc"
+        maxlength="-1"
+        auto-height
+      />
+    </view>
+  </view>
+
+  <view class="post-ft">
+    <view class="btn bp {{submitting || coverUploading ? 'btn-disabled' : ''}}" bindtap="submitActivity">
+      <text wx:if="{{!submitting && !coverUploading}}">{{isEditMode ? '保存修改' : '立即发布'}}</text>
+      <text wx:elif="{{coverUploading}}">封面上传中...</text>
+      <text wx:else>{{isEditMode ? '保存中...' : '发布中...'}}</text>
+    </view>
+  </view>
+
+  <view class="success-modal-overlay" wx:if="{{showSuccessModal}}" bindtap="onSuccessConfirm">
+    <view class="success-modal" catchtap="stopProp">
+      <view class="success-icon">✓</view>
+      <view class="success-title">发布成功</view>
+      <view class="success-desc">您的活动已成功发布，好友们可以报名参加了！</view>
+      <view class="success-actions">
+        <view class="btn btn-secondary" bindtap="onSuccessConfirm">返回</view>
+        <view class="btn bp" bindtap="onSuccessViewActivity">查看活动</view>
+      </view>
+    </view>
+  </view>
+</view>

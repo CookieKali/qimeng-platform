@@ -1,0 +1,207 @@
+/* 转发给企盟好友（任务/活动/名片共用） */
+.share-modal .mbody {
+  max-height: 72vh;
+  overflow-y: auto;
+}
+
+.share-action-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.share-preview-hint {
+  font-size: 10px;
+  color: #3a5878;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.share-item-preview {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  background: #070d1a;
+  border: 1.5px solid #1c2e48;
+  border-radius: 12px;
+}
+
+.share-item-kind {
+  font-size: 10px;
+  color: #5cb8ff;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.share-item-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: #e0eefc;
+  line-height: 1.4;
+}
+
+.share-item-meta {
+  font-size: 11px;
+  color: #7090b0;
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+.share-sec-t {
+  font-size: 11px;
+  color: #3a5878;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.share-search-wrap {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 12px;
+  margin-bottom: 10px;
+  background: #070d1a;
+  border: 1.5px solid #1c2e48;
+  border-radius: 10px;
+  box-sizing: border-box;
+}
+
+.share-search-input {
+  flex: 1;
+  font-size: 13px;
+  color: #c8e0f8;
+  min-height: 38px;
+}
+
+.share-search-ph {
+  color: #4a6888;
+  font-weight: 500;
+}
+
+.share-friend-list {
+  max-height: 220px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+
+.share-friend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 11px;
+  margin-bottom: 6px;
+  background: #070d1a;
+  border: 1.5px solid #1c2e48;
+  border-radius: 11px;
+}
+
+.share-friend-row.on {
+  border-color: var(--qm-accent-light);
+  background: rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.2);
+}
+
+.share-friend-av-wrap {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.share-friend-av-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border-radius: 50%;
+}
+
+.share-friend-av {
+  width: 40px;
+  height: 40px;
+  font-size: 12px;
+}
+
+.share-friend-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.share-friend-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: #e0eefc;
+}
+
+.share-friend-job {
+  font-size: 10px;
+  color: #7090b0;
+  margin-top: 2px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.share-friend-check {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--qm-accent-light);
+  color: #f1f3f9;
+  font-size: 12px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.share-friend-empty {
+  text-align: center;
+  padding: 16px 8px;
+  font-size: 12px;
+  color: #5a7a9a;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.share-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 12px;
+  margin-top: 4px;
+  border-top: 1px solid #1c2e48;
+}
+
+.share-action-btn {
+  box-sizing: border-box;
+  min-height: 44px;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  border-radius: 12px;
+  margin: 0;
+  flex: none;
+  width: 100%;
+}
+
+.share-action-primary {
+  font-size: 15px;
+}
+
+/* task-detail-share-row 样式见 tasks.wxss */
+
+.card-share-pair {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.card-share-pair .btn {
+  flex: 1;
+  min-width: 0;
+  padding-left: 8px;
+  padding-right: 8px;
+  font-size: 11px;
+}

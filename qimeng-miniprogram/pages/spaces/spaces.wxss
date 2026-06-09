@@ -1,0 +1,463 @@
+.page-wrap { background: transparent; }
+
+/* 场地卡片封面图 */
+.sc2-cover {
+  position: relative;
+  width: 100%;
+  height: 140px;
+  border-radius: 14px 14px 0 0;
+  overflow: hidden;
+}
+
+.sc2-cover-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.sc2-cover-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.sc2-cover-tags {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.sc2-type-tag {
+  font-size: 10px;
+  font-weight: 700;
+  color: #e0f0ff;
+  background: rgba(10, 20, 40, 0.7);
+  border: 1px solid rgba(80, 140, 220, 0.35);
+  border-radius: 20px;
+  padding: 2px 9px;
+}
+
+.sc2-price-tag {
+  font-size: 10px;
+  font-weight: 800;
+  color: #fbbf24;
+  background: rgba(30, 15, 0, 0.7);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+  border-radius: 20px;
+  padding: 2px 9px;
+}
+
+.sc2-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 5px;
+}
+
+.sc2-meta-chip {
+  font-size: 10px;
+  font-weight: 600;
+  color: #6a8aaa;
+  background: rgba(20, 40, 80, 0.5);
+  border: 1px solid rgba(28, 46, 80, 0.8);
+  border-radius: 20px;
+  padding: 2px 8px;
+}
+
+.station-card {
+  margin: 0 12px 12px;
+  background: #0c1e38;
+  border: 1.5px solid #1a3860;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* 封面区 */
+.station-card-cover {
+  position: relative;
+  width: 100%;
+  height: 120px;
+}
+
+.station-card-cover-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.station-card-cover-bg {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0d2248 0%, #0f2a56 50%, #0a1a38 100%);
+}
+
+.station-card-cover-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 14px 10px;
+  background: linear-gradient(0deg, rgba(5,12,28,0.88) 0%, transparent 100%);
+}
+
+.station-card-name {
+  font-size: 16px;
+  font-weight: 800;
+  color: #e8f2ff;
+  line-height: 1.3;
+}
+
+.station-card-region {
+  font-size: 11px;
+  color: rgba(160, 200, 255, 0.65);
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+/* 信息区 */
+.station-card-body {
+  padding: 12px 14px 14px;
+}
+
+.station-card-stats {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 10px;
+}
+
+.station-stat-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.station-stat-val {
+  font-size: 17px;
+  font-weight: 800;
+  color: #5cb8ff;
+  line-height: 1.2;
+}
+
+.station-stat-k {
+  font-size: 10px;
+  color: #5a7898;
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+.station-stat-divider {
+  width: 1px;
+  height: 28px;
+  background: rgba(28, 56, 100, 0.8);
+}
+
+.station-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(26, 56, 96, 0.6);
+  padding-top: 10px;
+}
+
+.station-card-operator {
+  font-size: 11px;
+  color: #7090b0;
+  font-weight: 600;
+}
+
+.station-card-arrow {
+  font-size: 12px;
+  color: #5cb8ff;
+  font-weight: 700;
+}
+
+.hub-empty-block {
+  text-align: center;
+  padding: 28px;
+  font-size: 13px;
+  color: #7090b0;
+  font-weight: 600;
+}
+
+.spaces-nav {
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.bookings-modal {
+  max-height: 78vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.bookings-scroll {
+  flex: 1;
+  max-height: 62vh;
+}
+
+.bookings-loading,
+.bookings-empty {
+  padding: 16px 4px 20px;
+  font-size: 13px;
+  color: #9499B0;
+  text-align: center;
+}
+
+.book-time-preview {
+  margin: 4px 0 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(28, 56, 100, 0.2);
+  border: 1px solid rgba(28, 56, 100, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.book-time-preview-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #5a7898;
+  letter-spacing: 0.06em;
+}
+
+.book-time-preview-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: #a8d0f0;
+}
+
+.book-cost-hint {
+  margin: 4px 0 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(59, 130, 246, 0.08);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  font-size: 13px;
+  color: #9499b0;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.bookings-sec-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--qm-accent-light);
+  margin: 4px 0 10px;
+  letter-spacing: 0.04em;
+}
+
+.bookings-sec-past {
+  margin-top: 18px;
+  color: #9499B0;
+}
+
+.booking-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #12151f;
+  border: 1px solid var(--qm-border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+
+.booking-card-past {
+  opacity: 0.92;
+}
+
+.booking-card-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.booking-space-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.booking-space {
+  font-size: 14px;
+  font-weight: 700;
+  color: #e8ecf4;
+}
+
+.booking-time {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #9499B0;
+  line-height: 1.5;
+}
+
+.booking-tag-cancelled {
+  font-size: 11px;
+  font-weight: 700;
+  color: #F87171;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+}
+
+.booking-dismiss-btn {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #9499b0;
+  background: rgba(148, 153, 176, 0.08);
+  border: 1px solid rgba(148, 153, 176, 0.25);
+  border-radius: 10px;
+}
+
+.booking-cancel-btn {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #F87171;
+  background: rgba(248, 113, 113, 0.1);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: 10px;
+}
+
+.spaces-top {
+  padding: 0 12px 8px;
+  background: var(--qm-bg);
+}
+
+.spaces-search {
+  margin-bottom: 10px;
+}
+
+.spaces-search .si-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(14, 24, 48, 0.75);
+  border: 1px solid rgba(28, 46, 72, 0.95);
+  border-radius: 10px;
+  padding: 0 12px;
+  height: 40px;
+  box-sizing: border-box;
+}
+
+.spaces-search .si {
+  flex: 1;
+  height: 40px;
+  line-height: 40px;
+  font-size: 14px;
+  color: #c0d8f0;
+  background: transparent;
+  border: none;
+}
+
+
+.type-scroll {
+  width: 100%;
+  white-space: nowrap;
+}
+
+.type-tags {
+  display: inline-flex;
+  flex-direction: row;
+  gap: 8px;
+  padding: 2px 0 6px;
+}
+
+.type-tag {
+  flex-shrink: 0;
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6a8aaa;
+  background: rgba(14, 24, 48, 0.65);
+  border: 1px solid rgba(28, 46, 72, 0.9);
+  transition: all 0.15s ease;
+}
+
+.type-tag.on {
+  color: #0a1e10;
+  background: linear-gradient(135deg, #28e880 0%, #1ab86a 100%);
+  border-color: rgba(40, 232, 128, 0.45);
+  box-shadow: 0 2px 8px rgba(40, 232, 128, 0.2);
+}
+
+.filter-bar {
+  padding: 0 12px 6px;
+}
+
+/* 审核状态样式 */
+.audit-status {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.audit-pending {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.audit-approved {
+  color: #28e880;
+  background: rgba(40, 232, 128, 0.12);
+  border: 1px solid rgba(40, 232, 128, 0.35);
+}
+
+.audit-rejected {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+}
+
+.booking-purpose {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #6a8aaa;
+  line-height: 1.4;
+}
+
+/* 预约详情样式 */
+.booking-detail-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(28, 46, 72, 0.5);
+}
+
+.booking-detail-section:last-of-type {
+  border-bottom: none;
+}
+
+.booking-detail-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6a8aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.booking-detail-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #e8ecf4;
+  line-height: 1.5;
+}

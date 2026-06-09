@@ -1,0 +1,104 @@
+<view class="chat-page">
+  <view class="chat-nav" style="padding-top:{{statusBarHeight}}px">
+    <view class="chat-back" bindtap="goBack">
+      <text class="chat-back-icon">‹</text>
+    </view>
+    <view class="chat-nav-center">
+      <view class="chat-nav-av-wrap">
+        <image wx:if="{{peerAvatarUrl}}" class="chat-nav-av-img" src="{{peerAvatarUrl}}" mode="aspectFill" />
+        <view wx:else class="chat-nav-av" style="background:{{peerAvatarBg}};color:{{peerAvatarC}}">{{peerNameAbbr}}</view>
+      </view>
+      <text class="chat-title">{{userName}}</text>
+    </view>
+    <view class="chat-nav-placeholder"></view>
+  </view>
+
+  <scroll-view
+    class="chat-scroll"
+    scroll-y
+    scroll-into-view="{{scrollIntoView}}"
+    scroll-with-animation
+    enhanced
+    show-scrollbar="{{false}}"
+  >
+    <view class="chat-loading" wx:if="{{loading}}">
+      <view class="chat-loading-dot"></view>
+      <text>加载中</text>
+    </view>
+
+    <view class="chat-empty" wx:elif="{{messages.length === 0}}">
+      <view class="chat-empty-icon">💬</view>
+      <text class="chat-empty-title">暂无消息</text>
+      <text class="chat-empty-desc">发一句打个招呼吧</text>
+    </view>
+
+    <block wx:else>
+      <view
+        wx:for="{{messages}}"
+        wx:key="id"
+        class="chat-msg-block"
+      >
+        <view wx:if="{{item.showTime}}" class="chat-time-row">
+          <text class="chat-time-pill">{{item.timeLabel}}</text>
+        </view>
+
+        <view
+          id="msg-{{item.id}}"
+          class="chat-row {{item.is_mine ? 'chat-row-mine' : 'chat-row-other'}}"
+        >
+          <!-- 对方消息：左头像 + 气泡 -->
+          <block wx:if="{{!item.is_mine}}">
+            <view class="chat-av-wrap">
+              <image wx:if="{{item.avatarUrl}}" class="chat-av-img" src="{{item.avatarUrl}}" mode="aspectFill" />
+              <view wx:else class="chat-av" style="background:{{item.avatarBg}};color:{{item.avatarC}}">{{item.nameAbbr}}</view>
+            </view>
+            <view class="chat-bubble-col">
+              <view class="chat-bubble chat-bubble-other">
+                <text class="chat-bubble-text" selectable>{{item.content}}</text>
+              </view>
+            </view>
+          </block>
+
+          <!-- 我的消息：气泡 + 右头像 -->
+          <block wx:else>
+            <view class="chat-bubble-col chat-bubble-col-mine">
+              <view class="chat-bubble chat-bubble-mine">
+                <text class="chat-bubble-text" selectable>{{item.content}}</text>
+              </view>
+            </view>
+            <view class="chat-av-wrap">
+              <image wx:if="{{item.avatarUrl}}" class="chat-av-img" src="{{item.avatarUrl}}" mode="aspectFill" />
+              <view wx:else class="chat-av" style="background:{{item.avatarBg}};color:{{item.avatarC}}">{{item.nameAbbr}}</view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </block>
+
+    <view id="chat-bottom-anchor" class="chat-bottom-anchor"></view>
+  </scroll-view>
+
+  <view class="chat-input-bar" style="padding-bottom:{{safeBottom}}px">
+    <view class="chat-input-wrap">
+      <textarea
+        class="chat-input"
+        value="{{inputText}}"
+        bindinput="onInput"
+        confirm-type="send"
+        bindconfirm="sendMsg"
+        placeholder="输入消息..."
+        placeholder-class="chat-input-ph"
+        maxlength="500"
+        auto-height
+        fixed="{{false}}"
+        show-confirm-bar="{{false}}"
+        adjust-position="{{true}}"
+        cursor-spacing="16"
+      />
+    </view>
+    <view
+      class="chat-send {{canSend && !sending ? 'chat-send-active' : 'chat-send-disabled'}}"
+      bindtap="sendMsg"
+    >{{sending ? '…' : '发送'}}</view>
+  </view>
+</view>

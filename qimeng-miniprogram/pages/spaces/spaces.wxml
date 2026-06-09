@@ -1,0 +1,303 @@
+<view class="page-wrap" style="padding-top:{{headerHeight}}px;padding-bottom:{{pageBottom}}px">
+  <view class="nav spaces-nav">
+    <text class="nav-t">空间预约</text>
+    <view class="nav-btn" bindtap="openMyBookings">我的预约</view>
+  </view>
+
+  <view class="seg" style="margin:10px 12px 0">
+    <view class="sb2 {{mainSeg === 0 ? 'on' : ''}}" bindtap="switchMainSeg" data-n="0">场地预约</view>
+    <view class="sb2 {{mainSeg === 1 ? 'on' : ''}}" bindtap="switchMainSeg" data-n="1">空间站</view>
+  </view>
+
+  <block wx:if="{{mainSeg === 1}}">
+    <view class="sec">空间站枢纽 ({{stations.length}})</view>
+    <view class="hub-empty-block" wx:if="{{!stations.length}}">暂无空间站，敬请期待</view>
+    <view class="station-card" wx:for="{{stations}}" wx:key="id" bindtap="openStationHub" data-id="{{item.id}}">
+      <!-- 封面图 / 占位渐变 -->
+      <view class="station-card-cover">
+        <image wx:if="{{item.cover_url}}" class="station-card-cover-img" src="{{item.cover_url}}" mode="aspectFill" />
+        <view wx:else class="station-card-cover-bg"></view>
+        <view class="station-card-cover-overlay">
+          <view class="station-card-name">{{item.name}}</view>
+          <view class="station-card-region">{{item.region}}</view>
+        </view>
+      </view>
+      <!-- 信息区 -->
+      <view class="station-card-body">
+        <view class="station-card-stats">
+          <view class="station-stat-item">
+            <text class="station-stat-val">{{item.member_count || 0}}</text>
+            <text class="station-stat-k">成员</text>
+          </view>
+          <view class="station-stat-divider"></view>
+          <view class="station-stat-item">
+            <text class="station-stat-val">{{item.shareholder_count || 0}}</text>
+            <text class="station-stat-k">股东</text>
+          </view>
+          <view class="station-stat-divider"></view>
+          <view class="station-stat-item">
+            <text class="station-stat-val">{{item.space_count || 0}}</text>
+            <text class="station-stat-k">场地</text>
+          </view>
+        </view>
+        <view class="station-card-footer">
+          <text class="station-card-operator" wx:if="{{item.operator_name}}">站长 · {{item.operator_name}}</text>
+          <text class="station-card-arrow">进入 ›</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <block wx:else>
+  <view class="spaces-top">
+    <view class="spaces-search">
+      <view class="si-wrap">
+        <text class="sym-icon search-sym">🔍</text>
+        <input
+          class="si"
+          placeholder="搜索空间名称/地址"
+          placeholder-class="si-ph"
+          value="{{spaceKeyword}}"
+          bindinput="onSpaceSearch"
+        />
+      </view>
+    </view>
+
+    <scroll-view class="type-scroll" scroll-x enable-flex show-scrollbar="{{false}}">
+      <view class="type-tags">
+        <view
+          class="type-tag {{activeType === item ? 'on' : ''}}"
+          wx:for="{{spaceTypes}}"
+          wx:key="*this"
+          bindtap="onTypeChange"
+          data-type="{{item}}"
+        >{{item}}</view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <view class="filter-bar">
+    <view class="fbtn {{cityF !== '全部' ? 'act' : ''}}" bindtap="toggleFilter" data-key="city">
+      区域{{cityF !== '全部' ? '·' + cityF : ''}} ▾
+    </view>
+  </view>
+
+  <view class="fdrop" wx:if="{{openFilter === 'city'}}">
+    <view class="ft {{cityF === item ? 'on' : ''}}" wx:for="{{cities}}" wx:key="*this"
+          bindtap="setFilter" data-value="{{item}}">{{item}}</view>
+  </view>
+
+  <view class="sec">共 {{displaySpaces.length}} 个空间</view>
+  <view style="text-align:center;padding:30px;font-size:13px;color:#2a4060;font-weight:600"
+        wx:if="{{displaySpaces.length === 0}}">无符合条件的空间</view>
+
+  <view wx:for="{{displaySpaces}}" wx:key="id">
+    <view class="sc2">
+      <!-- 封面区：有图显示图片，无图显示彩色色块 -->
+      <view class="sc2-cover">
+        <image wx:if="{{item.coverUrl}}" class="sc2-cover-img" src="{{item.coverUrl}}" mode="aspectFill" />
+        <view wx:else class="sc2-cover-placeholder" style="background:{{item.accent}};border-bottom:1px solid {{item.stroke}}">
+          <view style="font-size:14px;font-weight:800;color:{{item.tc}}">{{item.name}}</view>
+          <view style="font-size:10px;color:{{item.tc}};opacity:0.6;margin-top:3px;">{{item.type}}</view>
+        </view>
+        <!-- 浮层标签 -->
+        <view class="sc2-cover-tags">
+          <text class="sc2-type-tag">{{item.type}}</text>
+          <text class="sc2-price-tag">{{item.priceStr}}</text>
+        </view>
+      </view>
+      <view class="sb3">
+        <view class="sn">{{item.name}}</view>
+        <view class="sa">{{item.addr}}</view>
+        <view class="sc2-meta-row">
+          <text wx:if="{{item.cap}}" class="sc2-meta-chip">{{item.cap}}</text>
+          <text wx:if="{{item.open}}" class="sc2-meta-chip">{{item.open}}</text>
+        </view>
+        <view style="display:flex;gap:4px;flex-wrap:wrap;margin-top:7px">
+          <text class="pl pb" wx:for="{{item.feat}}" wx:key="*this" wx:for-item="feat">{{feat}}</text>
+        </view>
+        <view class="sf2">
+          <view class="btn bs" bindtap="openDetail" data-idx="{{index}}">详情</view>
+          <view class="btn bp" bindtap="openBooking" data-idx="{{index}}">立即预约</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  </block>
+
+<!-- 我的预约 -->
+<view class="ov" wx:if="{{modal === 'mybookings'}}" bindtap="closeModal">
+  <view class="mb bookings-modal" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">我的预约</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <scroll-view class="mbody bookings-scroll" scroll-y>
+      <view class="bookings-loading" wx:if="{{bookingsLoading}}">加载中...</view>
+      <block wx:else>
+        <view class="bookings-sec-title">即将到来</view>
+        <view class="bookings-empty" wx:if="{{upcomingBookings.length === 0}}">暂无即将到来的预约</view>
+        <view class="booking-card" wx:for="{{upcomingBookings}}" wx:key="id" catchtap="openBookingDetail" data-id="{{item.id}}">
+          <view class="booking-card-main">
+            <view class="booking-space-row">
+              <text class="booking-space">{{item.space_name}}</text>
+              <text class="audit-status {{item.audit_status_class}}">{{item.audit_status_text}}</text>
+            </view>
+            <view class="booking-time">{{item.timeLabel}}</view>
+            <view class="booking-purpose" wx:if="{{item.purpose}}">目的：{{item.purpose}}</view>
+          </view>
+          <view class="booking-cancel-btn" wx:if="{{item.canCancel}}"
+                catchtap="confirmCancelBooking"
+                data-id="{{item.id}}">取消</view>
+          <view class="booking-dismiss-btn" wx:if="{{item.canDismiss}}"
+                catchtap="dismissBooking"
+                data-id="{{item.id}}">知道了</view>
+        </view>
+
+        <view class="bookings-sec-title bookings-sec-past">历史记录</view>
+        <view class="bookings-empty" wx:if="{{pastBookings.length === 0}}">暂无历史记录</view>
+        <view class="booking-card booking-card-past" wx:for="{{pastBookings}}" wx:key="id" catchtap="openBookingDetail" data-id="{{item.id}}">
+          <view class="booking-card-main">
+            <view class="booking-space-row">
+              <text class="booking-space">{{item.space_name}}</text>
+              <text class="booking-tag-cancelled" wx:if="{{item.isCancelled}}">已取消</text>
+              <text class="audit-status {{item.audit_status_class}}" wx:else>{{item.audit_status_text}}</text>
+            </view>
+            <view class="booking-time">{{item.timeLabel}}</view>
+            <view class="booking-purpose" wx:if="{{item.purpose}}">目的：{{item.purpose}}</view>
+          </view>
+        </view>
+      </block>
+    </scroll-view>
+  </view>
+</view>
+
+<!-- 预约详情弹窗 -->
+<view class="ov" wx:if="{{modal === 'bookingDetail' && selectedBooking}}" bindtap="closeModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">预约详情</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <scroll-view class="mbody" scroll-y>
+      <view class="booking-detail-section">
+        <view class="booking-detail-label">空间</view>
+        <view class="booking-detail-value">{{selectedBooking.space_name}}</view>
+      </view>
+      <view class="booking-detail-section">
+        <view class="booking-detail-label">时间</view>
+        <view class="booking-detail-value">{{selectedBooking.timeLabel}}</view>
+      </view>
+      <view class="booking-detail-section">
+        <view class="booking-detail-label">审核状态</view>
+        <view class="booking-detail-value">
+          <text class="audit-status {{selectedBooking.audit_status_class}}">{{selectedBooking.audit_status_text}}</text>
+        </view>
+      </view>
+      <view class="booking-detail-section" wx:if="{{selectedBooking.purpose}}">
+        <view class="booking-detail-label">使用目的</view>
+        <view class="booking-detail-value">{{selectedBooking.purpose}}</view>
+      </view>
+      <view class="booking-detail-section">
+        <view class="booking-detail-label">参与人数</view>
+        <view class="booking-detail-value">{{selectedBooking.participant_count}}人</view>
+      </view>
+      <view class="booking-detail-section" wx:if="{{selectedBooking.note}}">
+        <view class="booking-detail-label">备注</view>
+        <view class="booking-detail-value">{{selectedBooking.note}}</view>
+      </view>
+      <view class="booking-detail-section" wx:if="{{selectedBooking.reject_reason}}">
+        <view class="booking-detail-label">拒绝原因</view>
+        <view class="booking-detail-value" style="color:#e53935">{{selectedBooking.reject_reason}}</view>
+      </view>
+      <view class="booking-detail-section">
+        <view class="booking-detail-label">费用</view>
+        <view class="booking-detail-value">
+          {{selectedBooking.is_free_trial ? '免费体验' : selectedBooking.amount + ' 积分'}}
+        </view>
+      </view>
+      <view class="btn bs" bindtap="closeModal" style="margin-top:16px">关闭</view>
+      <view class="btn bp" wx:if="{{selectedBooking.canCancel}}" bindtap="confirmCancelBooking" data-id="{{selectedBooking.id}}" style="margin-top:10px">取消预约</view>
+    </scroll-view>
+  </view>
+</view>
+
+<!-- 预约弹窗 -->
+<view class="ov" wx:if="{{modal === 'booking' && selectedSpace}}" bindtap="closeModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">预约空间</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <scroll-view class="mbody" scroll-y>
+      <view class="hb">
+        <view style="font-size:13px;font-weight:800;color:{{selectedSpace.tc}}">{{selectedSpace.name}}</view>
+        <view style="font-size:11px;color:#7090b0;margin-top:3px;font-weight:500">{{selectedSpace.addr}}</view>
+      </view>
+      <view class="fg">
+        <text class="fl">预约日期</text>
+        <picker mode="date" value="{{bookDate}}" bindchange="onBookDate">
+          <view class="fsl">{{bookDate}}</view>
+        </picker>
+      </view>
+      <view class="fg">
+        <text class="fl">时间段</text>
+        <picker mode="selector" range="{{timeSlots}}" value="{{bookTimeIdx}}" bindchange="onBookTime">
+          <view class="fsl">{{timeSlots[bookTimeIdx]}}</view>
+        </picker>
+      </view>
+      <view class="fg">
+        <text class="fl">使用人数</text>
+        <input class="fi" type="number" value="{{bookNum}}" bindinput="onBookNum" />
+      </view>
+      <view class="fg">
+        <text class="fl">使用目的</text>
+        <picker mode="selector" range="{{purposes}}" value="{{bookPurposeIdx}}" bindchange="onBookPurpose">
+          <view class="fsl">{{purposes[bookPurposeIdx]}}</view>
+        </picker>
+      </view>
+      <view class="fg">
+        <text class="fl">备注需求</text>
+        <textarea class="fta" placeholder="如：需要茶水、投影仪..." value="{{bookNote}}" bindinput="onBookNote" />
+      </view>
+      <!-- 时间预览提示 -->
+      <view class="book-time-preview" wx:if="{{bookDate && bookTimeRange}}">
+        <text class="book-time-preview-label">预约时段</text>
+        <text class="book-time-preview-val">{{bookDate}}  {{bookTimeRange}}（共 {{estimatedHours}} 小时）</text>
+      </view>
+      <view class="book-cost-hint">
+        <view wx:if="{{estimatedCost === 0}}">首次免费体验 · 无需积分</view>
+        <view wx:else>预计消耗 <text style="color:#fbbf24;font-weight:800">{{estimatedCost}}</text> 积分</view>
+      </view>
+      <view class="btn bp" bindtap="submitBooking">提交预约</view>
+    </scroll-view>
+  </view>
+</view>
+
+<!-- 空间详情弹窗 -->
+<view class="ov" wx:if="{{modal === 'detail' && selectedSpace}}" bindtap="closeModal">
+  <view class="mb" catchtap="stopProp">
+    <view class="mh">
+      <text class="mht">空间详情</text>
+      <view class="mx" bindtap="closeModal">×</view>
+    </view>
+    <view class="mbody">
+      <view style="height:64px;background:{{selectedSpace.accent}};border:1.5px solid {{selectedSpace.stroke}};border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:{{selectedSpace.tc}};margin-bottom:13px">
+        {{selectedSpace.name}}
+      </view>
+      <view style="font-size:11px;color:#7090b0;line-height:2.2;margin-bottom:13px;font-weight:500">
+        <view>地址：<text style="color:#a8c8e8;font-weight:700">{{selectedSpace.addr}}</text></view>
+        <view>类型：<text style="color:#a8c8e8;font-weight:700">{{selectedSpace.type}}</text></view>
+        <view>容纳：<text style="color:#a8c8e8;font-weight:700">{{selectedSpace.cap}}</text></view>
+        <view>面积：<text style="color:#a8c8e8;font-weight:700">{{selectedSpace.area}}</text></view>
+        <view>开放：<text style="color:#a8c8e8;font-weight:700">{{selectedSpace.open}}</text></view>
+        <view>设施：<text style="color:#a8c8e8;font-weight:700">{{selectedSpace.featStr}}</text></view>
+      </view>
+      <view class="btn bp" bindtap="openBookingFromDetail">立即预约此空间</view>
+    </view>
+  </view>
+</view>
+
+</view>
+
+<custom-tab-bar />
